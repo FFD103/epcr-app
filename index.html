@@ -14,7 +14,7 @@
             font-family: 'Inter', sans-serif;
         }
         .form-section {
-            background-color: #f9fafb;
+            background-color: #ffffff; /* Changed from f9fafb to white */
             border: 1px solid #e5e7eb;
             border-radius: 0.75rem;
             padding: 1.5rem;
@@ -90,8 +90,11 @@
         }
          @media (min-width: 1024px) {
             .grid-container {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-columns: repeat(2, minmax(0, 1fr)); /* Default to 2 columns on lg screens */
             }
+             .grid-container-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+             }
              .grid-container-4 {
                 grid-template-columns: repeat(4, minmax(0, 1fr));
             }
@@ -104,14 +107,14 @@
             padding: 1rem;
             border: 1px solid #e5e7eb;
             border-radius: 0.5rem;
-            background-color: #fff;
+            background-color: #f9fafb; /* Lighter background for nested items */
         }
          .history-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
             margin-bottom: 1rem;
-            background-color: white;
+            background-color: #f9fafb;
             padding: 1rem;
             border-radius: 0.5rem;
             border: 1px solid #e5e7eb;
@@ -124,7 +127,7 @@
             padding: 1rem;
             border: 1px solid #e5e7eb;
             border-radius: 0.5rem;
-            background-color: #fff;
+            background-color: #f9fafb;
          }
         @media (min-width: 1024px) {
             .exam-row {
@@ -135,7 +138,7 @@
             grid-column: 1 / -1;
             font-size: 0.875rem;
             color: #4b5563;
-            background-color: #f3f4f6;
+            background-color: #e5e7eb;
             padding: 0.5rem;
             border-radius: 0.25rem;
             min-height: 2.5rem;
@@ -170,554 +173,566 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 p-4 md:p-8">
+<body class="bg-gray-200 p-4 md:p-8">
 
-    <div class="max-w-7xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg">
+    <div class="max-w-screen-2xl mx-auto">
         <header class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Fire Department Patient Care Report</h1>
             <p class="text-gray-500 mt-1">Non-Transporting First Response (CHART Format)</p>
         </header>
-        
-        <!-- Chief Complaint & Situation -->
-        <div class="form-section">
-            <h2 class="form-section-title collapsible-header">
-                <span class="flex justify-between items-center w-full">
-                    <span>C - Chief Complaint & Situation</span>
-                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-            </h2>
-            <div class="collapsible-content">
-                <!-- Patient & Dispatch Info -->
-                <h3 class="font-semibold text-lg text-gray-700 mb-3">Scene Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="dispatch-reason">Dispatch Reason</label>
-                        <input type="text" id="dispatch-reason" placeholder="e.g., Difficulty Breathing">
-                    </div>
-                    <div>
-                        <label for="first-unit-on-scene">First Unit on Scene?</label>
-                        <select id="first-unit-on-scene">
-                            <option value="" disabled selected>Select Yes or No...</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="patient-age">Patient Age</label>
-                        <input type="number" id="patient-age" placeholder="e.g., 68">
-                    </div>
-                    <div>
-                        <label for="patient-gender">Patient Gender</label>
-                        <select id="patient-gender">
-                            <option value="" disabled selected>Select Gender...</option>
-                            <option>Male</option>
-                            <option>Female</option>
-                            <option>Non-binary</option>
-                            <option>Unknown</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="patient-found-location">Patient Found Location</label>
-                        <input type="text" id="patient-found-location" placeholder="e.g., sitting on edge of bed">
-                    </div>
-                </div>
 
-                <!-- EMS Reason for Encounter -->
-                <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Signs & Symptoms (S)</h3>
-                <div class="space-y-6">
-                    <div>
-                        <label for="possible-injury">Event Type</label>
-                        <select id="possible-injury">
-                            <option value="" disabled selected>Select event type...</option>
-                            <option value="No">Medical</option>
-                            <option value="Yes">Trauma</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="patient-chief-complaint">Patient's Chief Complaint</label>
-                        <input type="text" id="patient-chief-complaint" placeholder="e.g., 'My chest hurts and I can't breathe.'">
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-gray-700 mb-2">Patient's Stated Symptoms (Categorized)</h4>
+        <main class="lg:grid lg:grid-cols-2 lg:gap-8">
+            <!-- Left Column -->
+            <div class="space-y-8">
+                <!-- Chief Complaint & Situation -->
+                <div class="form-section">
+                    <h2 class="form-section-title collapsible-header">
+                        <span class="flex justify-between items-center w-full">
+                            <span>C - Chief Complaint & Situation</span>
+                            <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </h2>
+                    <div class="collapsible-content">
+                        <!-- Patient & Dispatch Info -->
+                        <h3 class="font-semibold text-lg text-gray-700 mb-3">Scene Information</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="symptom-parent">Category</label>
-                                <select id="symptom-parent">
-                                    <option value="" disabled selected>Select...</option>
+                                <label for="dispatch-reason">Dispatch Reason</label>
+                                <input type="text" id="dispatch-reason" placeholder="e.g., Difficulty Breathing">
+                            </div>
+                            <div>
+                                <label for="first-unit-on-scene">First Unit on Scene?</label>
+                                <select id="first-unit-on-scene">
+                                    <option value="" disabled selected>Select Yes or No...</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="symptom-description">Description</label>
-                                <select id="symptom-description" disabled>
-                                    <option value="" disabled selected>Select...</option>
+                                <label for="patient-age">Patient Age</label>
+                                <input type="number" id="patient-age" placeholder="e.g., 68">
+                            </div>
+                            <div>
+                                <label for="patient-gender">Patient Gender</label>
+                                <select id="patient-gender">
+                                    <option value="" disabled selected>Select Gender...</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Non-binary</option>
+                                    <option>Unknown</option>
                                 </select>
                             </div>
+                            <div class="md:col-span-2">
+                                <label for="patient-found-location">Patient Found Location</label>
+                                <input type="text" id="patient-found-location" placeholder="e.g., sitting on edge of bed">
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-gray-700 mb-2">Chief Complaint Details</h4>
+
+                        <!-- EMS Reason for Encounter -->
+                        <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Signs & Symptoms (S)</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="possible-injury">Event Type</label>
+                                <select id="possible-injury">
+                                    <option value="" disabled selected>Select event type...</option>
+                                    <option value="No">Medical</option>
+                                    <option value="Yes">Trauma</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="patient-chief-complaint">Patient's Chief Complaint</label>
+                                <input type="text" id="patient-chief-complaint" placeholder="e.g., 'My chest hurts and I can't breathe.'">
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">Patient's Stated Symptoms (Categorized)</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="symptom-parent">Category</label>
+                                        <select id="symptom-parent">
+                                            <option value="" disabled selected>Select...</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="symptom-description">Description</label>
+                                        <select id="symptom-description" disabled>
+                                            <option value="" disabled selected>Select...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">Chief Complaint Details</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="anatomic-location">Anatomic Location</label>
+                                        <select id="anatomic-location">
+                                            <option value="" disabled selected>Select...</option>
+                                            <option>Abdomen</option>
+                                            <option>Back</option>
+                                            <option>Chest</option>
+                                            <option>Extremity-Lower</option>
+                                            <option>Extremity-Upper</option>
+                                            <option>General/Global</option>
+                                            <option>Genitalia</option>
+                                            <option>Head</option>
+                                            <option>Neck</option>
+                                            <option>Not Applicable</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="organ-system">Organ System</label>
+                                        <select id="organ-system">
+                                            <option value="" disabled selected>Select...</option>
+                                            <option>Behavioral/Psychiatric</option>
+                                            <option>Cardiovascular</option>
+                                            <option>CNS/Neuro</option>
+                                            <option>Endocrine/Metabolic</option>
+                                            <option>GI</option>
+                                            <option>Global/General</option>
+                                            <option>Lymphatic/Immune</option>
+                                            <option>Musculoskeletal/Skin</option>
+                                            <option>Not Applicable</option>
+                                            <option>Not Recorded</option>
+                                            <option>Pulmonary</option>
+                                            <option>Renal</option>
+                                            <option>Reproductive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trauma Specific Fields (Conditional) -->
+                        <div id="trauma-fields" class="hidden mt-6">
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Trauma Details</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="cause-injury-category">Cause of Injury Category</label>
+                                    <select id="cause-injury-category">
+                                        <option value="" disabled selected>Select Category...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="cause-injury-specific">Specific Cause</label>
+                                    <select id="cause-injury-specific" disabled>
+                                        <option value="" disabled selected>Select Specific Cause...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Provider's First Impression Section -->
+                        <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Provider's First Impression</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="anatomic-location">Anatomic Location</label>
-                                <select id="anatomic-location">
-                                    <option value="" disabled selected>Select...</option>
-                                    <option>Head</option>
-                                    <option>Neck</option>
-                                    <option>Chest</option>
-                                    <option>Abdomen</option>
-                                    <option>Back</option>
-                                    <option>Pelvis/GU</option>
-                                    <option>Upper Extremity</option>
-                                    <option>Lower Extremity</option>
-                                    <option>Generalized</option>
+                                <label for="impression-parent">Impression - Category</label>
+                                <select id="impression-parent">
+                                    <option value="" disabled selected>Select Category...</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="organ-system">Organ System</label>
-                                <select id="organ-system">
-                                    <option value="" disabled selected>Select...</option>
-                                    <option>Cardiovascular</option>
-                                    <option>Respiratory</option>
-                                    <option>Neurological</option>
-                                    <option>Gastrointestinal</option>
-                                    <option>Genitourinary</option>
-                                    <option>Musculoskeletal</option>
-                                    <option>Integumentary (Skin)</option>
-                                    <option>Endocrine</option>
-                                    <option>Behavioral</option>
-                                    <option>Other/Not Applicable</option>
+                                <label for="impression-description">Impression - Description</label>
+                                <select id="impression-description" disabled>
+                                    <option value="" disabled selected>Select Description...</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Trauma Specific Fields (Conditional) -->
-                <div id="trauma-fields" class="hidden mt-6">
-                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Trauma Details</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="cause-injury-category">Cause of Injury Category</label>
-                            <select id="cause-injury-category">
-                                <option value="" disabled selected>Select Category...</option>
-                            </select>
+                <!-- History -->
+                <div class="form-section">
+                    <h2 class="form-section-title collapsible-header">
+                        <span class="flex justify-between items-center w-full">
+                            <span>H - History (SAMPLE)</span>
+                            <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </h2>
+                    <div class="collapsible-content">
+                        <!-- A - Allergies -->
+                        <h3 class="font-semibold text-lg text-gray-700 mb-3">Allergies (A)</h3>
+                        <div class="grid-container">
+                            <div>
+                                <label for="medication-allergies">Known Medication Allergies</label>
+                                <input type="text" id="medication-allergies" placeholder="e.g., Penicillin (rash)">
+                            </div>
+                            <div>
+                                <label for="food-allergies">Known Environmental/Food Allergies</label>
+                                <input type="text" id="food-allergies" placeholder="e.g., Peanuts, None reported">
+                            </div>
                         </div>
-                        <div>
-                            <label for="cause-injury-specific">Specific Cause</label>
-                            <select id="cause-injury-specific" disabled>
-                                <option value="" disabled selected>Select Specific Cause...</option>
-                            </select>
+                        
+                        <!-- M - Medications -->
+                        <div class="mt-6">
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Current Medications (M)</h3>
+                            <div id="medications-container" class="space-y-4">
+                                <!-- Dynamic medication rows will be injected here -->
+                            </div>
+                            <button type="button" id="add-medication" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Medication</button>
                         </div>
-                    </div>
-                </div>
 
-
-                <!-- Provider's First Impression Section -->
-                <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Provider's First Impression</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="impression-parent">Impression - Category</label>
-                        <select id="impression-parent">
-                            <option value="" disabled selected>Select Category...</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="impression-description">Impression - Description</label>
-                        <select id="impression-description" disabled>
-                            <option value="" disabled selected>Select Description...</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- History -->
-        <div class="form-section">
-             <h2 class="form-section-title collapsible-header">
-                <span class="flex justify-between items-center w-full">
-                    <span>H - History (SAMPLE)</span>
-                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-            </h2>
-            <div class="collapsible-content">
-                <!-- A - Allergies -->
-                <h3 class="font-semibold text-lg text-gray-700 mb-3">Allergies (A)</h3>
-                <div class="grid-container">
-                    <div>
-                        <label for="medication-allergies">Known Medication Allergies</label>
-                        <input type="text" id="medication-allergies" placeholder="e.g., Penicillin (rash)">
-                    </div>
-                    <div>
-                        <label for="food-allergies">Known Environmental/Food Allergies</label>
-                        <input type="text" id="food-allergies" placeholder="e.g., Peanuts, None reported">
-                    </div>
-                </div>
-                
-                <!-- M - Medications -->
-                <div class="mt-6">
-                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Current Medications (M)</h3>
-                    <div id="medications-container" class="space-y-4">
-                        <!-- Dynamic medication rows will be injected here -->
-                    </div>
-                    <button type="button" id="add-medication" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Medication</button>
-                </div>
-
-                <!-- P - Past History -->
-                <div class="mt-6">
-                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Past Medical History (P)</h3>
-                    <div class="mt-4">
-                        <label>Medical/Surgical History</label>
-                        <div id="medical-history-container" class="space-y-4">
-                            <!-- Dynamic history rows will be injected here -->
+                        <!-- P - Past History -->
+                        <div class="mt-6">
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Past Medical History (P)</h3>
+                            <div class="mt-4">
+                                <label>Medical/Surgical History</label>
+                                <div id="medical-history-container" class="space-y-4">
+                                    <!-- Dynamic history rows will be injected here -->
+                                </div>
+                                <button type="button" id="add-history" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Medical History</button>
+                            </div>
+                            <div class="grid-container mt-4">
+                                <div>
+                                    <label for="pregnancy">Pregnancy</label>
+                                    <select id="pregnancy">
+                                        <option value="" disabled selected>Select Status...</option>
+                                        <option>No</option>
+                                        <option>Yes, Confirmed Less Than 20 Weeks</option>
+                                        <option>Yes, Confirmed Greater Than 20 Weeks</option>
+                                        <option>Yes, Unknown Gestational Weeks</option>
+                                        <option>Unknown</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="substance-use">Alcohol/Drug Use Indicators</label>
+                                    <select id="substance-use">
+                                        <option value="" disabled selected>Select Indicator...</option>
+                                        <option>None Reported</option>
+                                        <option>Patient Admits to Alcohol Use</option>
+                                        <option>Patient Admits to Drug Use</option>
+                                        <option>Patient Admits to Alcohol and Drug Use</option>
+                                        <option>Odor of Alcoholic Beverage on Breath</option>
+                                        <option>Drug Paraphernalia on Scene</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <button type="button" id="add-history" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Medical History</button>
-                    </div>
-                    <div class="grid-container mt-4">
-                        <div>
-                            <label for="pregnancy">Pregnancy</label>
-                            <select id="pregnancy">
-                                <option value="" disabled selected>Select Status...</option>
-                                <option>No</option>
-                                <option>Yes, Confirmed Less Than 20 Weeks</option>
-                                <option>Yes, Confirmed Greater Than 20 Weeks</option>
-                                <option>Yes, Unknown Gestational Weeks</option>
-                                <option>Unknown</option>
-                            </select>
+                        
+                        <!-- L - Last Oral Intake -->
+                        <div class="mt-6">
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Last Oral Intake (L)</h3>
+                            <div>
+                                <label for="last-oral-intake">Last Known Well/Last Oral Intake</label>
+                                <input type="datetime-local" id="last-oral-intake">
+                            </div>
                         </div>
-                        <div>
-                            <label for="substance-use">Alcohol/Drug Use Indicators</label>
-                            <select id="substance-use">
-                                <option value="" disabled selected>Select Indicator...</option>
-                                <option>None Reported</option>
-                                <option>Patient Admits to Alcohol Use</option>
-                                <option>Patient Admits to Drug Use</option>
-                                <option>Patient Admits to Alcohol and Drug Use</option>
-                                <option>Odor of Alcoholic Beverage on Breath</option>
-                                <option>Drug Paraphernalia on Scene</option>
-                            </select>
+                        
+                        <!-- E - Events Leading Up To -->
+                        <div class="mt-6">
+                            <h3 class="font-semibold text-lg text-gray-700 mb-3">Events Leading Up To (E)</h3>
+                            <div>
+                                <label for="events-leading-up-to">Describe the events leading up to the incident</label>
+                                <textarea id="events-leading-up-to" rows="4" placeholder="e.g., Patient was watching TV when they suddenly felt dizzy..."></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- L - Last Oral Intake -->
-                <div class="mt-6">
-                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Last Oral Intake (L)</h3>
-                    <div>
-                        <label for="last-oral-intake">Last Known Well/Last Oral Intake</label>
-                        <input type="datetime-local" id="last-oral-intake">
-                    </div>
-                </div>
-                
-                <!-- E - Events Leading Up To -->
-                <div class="mt-6">
-                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Events Leading Up To (E)</h3>
-                    <div>
-                        <label for="events-leading-up-to">Describe the events leading up to the incident</label>
-                        <textarea id="events-leading-up-to" rows="4" placeholder="e.g., Patient was watching TV when they suddenly felt dizzy..."></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Assessment -->
-        <div class="form-section">
-            <h2 class="form-section-title collapsible-header">
-                <span class="flex justify-between items-center w-full">
-                    <span>A - Assessment & Vitals</span>
-                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-            </h2>
-            <div class="collapsible-content">
-                <!-- Primary Survey -->
-                <h3 class="font-semibold text-lg text-gray-700 mb-3">Initial Patient Assessment (Primary Survey)</h3>
-                <div class="grid-container mb-6">
-                    <div>
-                        <label for="avpu">Level of Consciousness (AVPU)</label>
-                        <select id="avpu">
-                            <option value="" disabled selected>Select AVPU...</option>
-                            <option value="Alert">Alert</option>
-                            <option value="Verbal">Responds to Verbal</option>
-                            <option value="Painful">Responds to Pain</option>
-                            <option value="Unresponsive">Unresponsive</option>
-                        </select>
-                    </div>
-                     <div id="mental-status-container" class="hidden">
-                        <label>Patient's Mental Status/Orientation</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-5 items-center gap-x-4 gap-y-2 p-3 bg-white border rounded-lg">
-                            <div class="flex items-center">
-                                <input id="oriented-person" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
-                                <label for="oriented-person" class="ml-2 font-normal text-gray-900">Person</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="oriented-place" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
-                                <label for="oriented-place" class="ml-2 font-normal text-gray-900">Place</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="oriented-time" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
-                                <label for="oriented-time" class="ml-2 font-normal text-gray-900">Time</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input id="oriented-event" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
-                                <label for="oriented-event" class="ml-2 font-normal text-gray-900">Event</label>
-                            </div>
-                            <div id="orientation-status" class="sm:ml-auto text-center sm:text-right font-semibold text-gray-700">A+O x 0</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div>
-                        <label for="gcs-eye">GCS - Eye</label>
-                        <select id="gcs-eye" class="gcs-component">
-                            <option value="0" disabled selected>Select Eye Response...</option>
-                            <option value="4">4 - Spontaneous</option>
-                            <option value="3">3 - To Voice</option>
-                            <option value="2">2 - To Pain</option>
-                            <option value="1">1 - None</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="gcs-verbal">GCS - Verbal</label>
-                        <select id="gcs-verbal" class="gcs-component">
-                            <option value="0" disabled selected>Select Verbal Response...</option>
-                            <option value="5">5 - Oriented</option>
-                            <option value="4">4 - Confused</option>
-                            <option value="3">3 - Inappropriate Words</option>
-                            <option value="2">2 - Incomprehensible</option>
-                            <option value="1">1 - None</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="gcs-motor">GCS - Motor</label>
-                        <select id="gcs-motor" class="gcs-component">
-                            <option value="0" disabled selected>Select Motor Response...</option>
-                            <option value="6">6 - Obeys Commands</option>
-                            <option value="5">5 - Localizes Pain</option>
-                            <option value="4">4 - Withdraws from Pain</option>
-                            <option value="3">3 - Flexion to Pain</option>
-                            <option value="2">2 - Extension to Pain</option>
-                            <option value="1">1 - None</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Vitals -->
-                <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Vital Signs</h3>
-                <div class="grid-container grid-container-4">
-                    <div>
-                        <label for="heart-rate">Heart Rate</label>
-                        <input type="number" id="heart-rate" placeholder="bpm">
-                    </div>
-                    <div>
-                        <label for="bp-systolic">Systolic BP</label>
-                        <input type="number" id="bp-systolic" placeholder="mmHg">
-                    </div>
-                    <div>
-                        <label for="bp-diastolic">Diastolic BP</label>
-                        <input type="number" id="bp-diastolic" placeholder="mmHg">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label for="resp-rate">Resp. Rate</label>
-                            <input type="number" id="resp-rate" placeholder="breaths/min">
-                        </div>
-                        <div>
-                            <label for="resp-effort">Effort</label>
-                            <select id="resp-effort">
-                                <option selected>Normal</option>
-                                <option>Shallow</option>
-                                <option>Labored</option>
-                                <option>Gasping</option>
-                                <option>Accessory Muscle Use</option>
-                                <option>Retractions</option>
-                                <option>Nasal Flaring</option>
-                                <option>Tripoding</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="spo2">SpO2</label>
-                        <input type="number" id="spo2" placeholder="%">
-                    </div>
-                    <div>
-                        <label for="blood-glucose">Blood Glucose</label>
-                        <input type="number" id="blood-glucose" placeholder="mg/dL">
-                    </div>
-                    <div>
-                        <label for="pain-scale-score">Pain Score</label>
-                        <input type="number" id="pain-scale-score" min="0" max="10" placeholder="0-10">
-                    </div>
-                </div>
-
-                <!-- Stroke Scale -->
-                <div class="mt-6 border-t pt-6">
-                    <div class="flex items-center mb-4">
-                        <input id="suspected-stroke-checkbox" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                        <label for="suspected-stroke-checkbox" class="ml-2 text-lg font-semibold text-gray-700">Suspected Stroke?</label>
-                    </div>
-                    <div id="slams-section" class="hidden">
-                        <h4 class="font-medium text-gray-800 mb-3">S-LAMS Stroke Scale</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <!-- Assessment -->
+                <div class="form-section">
+                    <h2 class="form-section-title collapsible-header">
+                        <span class="flex justify-between items-center w-full">
+                            <span>A - Assessment & Vitals</span>
+                            <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </h2>
+                    <div class="collapsible-content">
+                        <!-- Primary Survey -->
+                        <h3 class="font-semibold text-lg text-gray-700 mb-3">Initial Patient Assessment (Primary Survey)</h3>
+                        <div class="space-y-6 mb-6">
                             <div>
-                                <label for="slams-facial">Facial Droop</label>
-                                <select id="slams-facial" class="slams-component">
-                                    <option value="0">Absent</option>
-                                    <option value="1">Present</option>
+                                <label for="avpu">Level of Consciousness (AVPU)</label>
+                                <select id="avpu">
+                                    <option value="" disabled selected>Select AVPU...</option>
+                                    <option value="Alert">Alert</option>
+                                    <option value="Verbal">Responds to Verbal</option>
+                                    <option value="Painful">Responds to Pain</option>
+                                    <option value="Unresponsive">Unresponsive</option>
+                                </select>
+                            </div>
+                             <div id="mental-status-container" class="hidden">
+                                <label>Patient's Mental Status/Orientation</label>
+                                <div class="grid grid-cols-2 sm:grid-cols-5 items-center gap-x-4 gap-y-2 p-3 bg-white border rounded-lg">
+                                    <div class="flex items-center">
+                                        <input id="oriented-person" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
+                                        <label for="oriented-person" class="ml-2 font-normal text-gray-900">Person</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="oriented-place" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
+                                        <label for="oriented-place" class="ml-2 font-normal text-gray-900">Place</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="oriented-time" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
+                                        <label for="oriented-time" class="ml-2 font-normal text-gray-900">Time</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="oriented-event" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
+                                        <label for="oriented-event" class="ml-2 font-normal text-gray-900">Event</label>
+                                    </div>
+                                    <div id="orientation-status" class="sm:ml-auto text-center sm:text-right font-semibold text-gray-700">A+O x 0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div>
+                                <label for="gcs-eye">GCS - Eye</label>
+                                <select id="gcs-eye" class="gcs-component">
+                                    <option value="0" disabled selected>Select Eye Response...</option>
+                                    <option value="4">4 - Spontaneous</option>
+                                    <option value="3">3 - To Voice</option>
+                                    <option value="2">2 - To Pain</option>
+                                    <option value="1">1 - None</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="slams-arm">Arm Drift</label>
-                                <select id="slams-arm" class="slams-component">
-                                    <option value="0">Absent</option>
-                                    <option value="1">Drifts Down</option>
-                                    <option value="2">Falls Rapidly</option>
+                                <label for="gcs-verbal">GCS - Verbal</label>
+                                <select id="gcs-verbal" class="gcs-component">
+                                    <option value="0" disabled selected>Select Verbal Response...</option>
+                                    <option value="5">5 - Oriented</option>
+                                    <option value="4">4 - Confused</option>
+                                    <option value="3">3 - Inappropriate Words</option>
+                                    <option value="2">2 - Incomprehensible</option>
+                                    <option value="1">1 - None</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="slams-speech">Speech Deficit</label>
-                                <select id="slams-speech" class="slams-component">
-                                    <option value="0">Normal</option>
-                                    <option value="1">Present</option>
+                                <label for="gcs-motor">GCS - Motor</label>
+                                <select id="gcs-motor" class="gcs-component">
+                                    <option value="0" disabled selected>Select Motor Response...</option>
+                                    <option value="6">6 - Obeys Commands</option>
+                                    <option value="5">5 - Localizes Pain</option>
+                                    <option value="4">4 - Withdraws from Pain</option>
+                                    <option value="3">3 - Flexion to Pain</option>
+                                    <option value="2">2 - Extension to Pain</option>
+                                    <option value="1">1 - None</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Vitals -->
+                        <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Vital Signs</h3>
+                        <div class="grid-container grid-container-4">
+                            <div>
+                                <label for="heart-rate">Heart Rate</label>
+                                <input type="number" id="heart-rate" placeholder="bpm">
+                            </div>
+                            <div>
+                                <label for="bp-systolic">Systolic BP</label>
+                                <input type="number" id="bp-systolic" placeholder="mmHg">
+                            </div>
+                            <div>
+                                <label for="bp-diastolic">Diastolic BP</label>
+                                <input type="number" id="bp-diastolic" placeholder="mmHg">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label for="resp-rate">Resp. Rate</label>
+                                    <input type="number" id="resp-rate" placeholder="breaths/min">
+                                </div>
+                                <div>
+                                    <label for="resp-effort">Effort</label>
+                                    <select id="resp-effort">
+                                        <option selected>Normal</option>
+                                        <option>Shallow</option>
+                                        <option>Labored</option>
+                                        <option>Gasping</option>
+                                        <option>Accessory Muscle Use</option>
+                                        <option>Retractions</option>
+                                        <option>Nasal Flaring</option>
+                                        <option>Tripoding</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="spo2">SpO2</label>
+                                <input type="number" id="spo2" placeholder="%">
+                            </div>
+                            <div>
+                                <label for="blood-glucose">Blood Glucose</label>
+                                <input type="number" id="blood-glucose" placeholder="mg/dL">
+                            </div>
+                            <div>
+                                <label for="pain-scale-score">Pain Score</label>
+                                <input type="number" id="pain-scale-score" min="0" max="10" placeholder="0-10">
+                            </div>
+                        </div>
+
+                        <!-- Stroke Scale -->
+                        <div class="mt-6 border-t pt-6">
+                            <div class="flex items-center mb-4">
+                                <input id="suspected-stroke-checkbox" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                <label for="suspected-stroke-checkbox" class="ml-2 text-lg font-semibold text-gray-700">Suspected Stroke?</label>
+                            </div>
+                            <div id="slams-section" class="hidden">
+                                <h4 class="font-medium text-gray-800 mb-3">S-LAMS Stroke Scale</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                    <div>
+                                        <label for="slams-facial">Facial Droop</label>
+                                        <select id="slams-facial" class="slams-component">
+                                            <option value="0">Absent</option>
+                                            <option value="1">Present</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="slams-arm">Arm Drift</label>
+                                        <select id="slams-arm" class="slams-component">
+                                            <option value="0">Absent</option>
+                                            <option value="1">Drifts Down</option>
+                                            <option value="2">Falls Rapidly</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="slams-speech">Speech Deficit</label>
+                                        <select id="slams-speech" class="slams-component">
+                                            <option value="0">Normal</option>
+                                            <option value="1">Present</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="slams-grip">Grip Strength</label>
+                                        <select id="slams-grip" class="slams-component">
+                                            <option value="0">Normal</option>
+                                            <option value="1">Weak Grip</option>
+                                            <option value="2">No Grip</option>
+                                        </select>
+                                    </div>
+                                    <div class="text-center">
+                                        <label>S-LAMS Score</label>
+                                        <div id="slams-score" class="slams-score-display">0</div>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <label for="stroke-symptoms-resolved">Stroke/CVA Symptoms Resolved</label>
+                                    <select id="stroke-symptoms-resolved">
+                                        <option value="" disabled selected>Select Status...</option>
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                        <option>Unknown</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 border-t pt-6">
+                            <h3 class="font-semibold text-lg text-gray-700">Physical Exam Findings (Head-to-Toe)</h3>
+                            <div id="exam-findings-container" class="space-y-4 mt-2">
+                                <!-- Dynamic exam rows will be injected here -->
+                            </div>
+                            <button type="button" id="add-exam-finding" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Exam Finding</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <!-- Interventions -->
+                <div class="form-section">
+                    <h2 class="form-section-title collapsible-header">
+                        <span class="flex justify-between items-center w-full">
+                            <span>R - Interventions (Rx)</span>
+                            <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </h2>
+                    <div class="collapsible-content">
+                        <div id="interventions-container" class="space-y-4">
+                            <!-- Dynamic intervention rows will be added here -->
+                        </div>
+                        <button type="button" id="add-intervention" class="mt-4 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Intervention</button>
+                    </div>
+                </div>
+
+                <!-- Transfer of Care -->
+                <div class="form-section">
+                    <h2 class="form-section-title collapsible-header">
+                        <span class="flex justify-between items-center w-full">
+                            <span>T - Transfer of Care</span>
+                            <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </span>
+                    </h2>
+                    <div class="collapsible-content">
+                        <div class="grid-container grid-container-3">
+                            <div>
+                                <label for="patient-move">Method of Movement</label>
+                                <select id="patient-move">
+                                    <option value="" disabled selected>Select Method...</option>
+                                    <option>Stretcher</option>
+                                    <option>Stair Chair</option>
+                                    <option>Carried</option>
+                                    <option>Walked</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="slams-grip">Grip Strength</label>
-                                <select id="slams-grip" class="slams-component">
-                                    <option value="0">Normal</option>
-                                    <option value="1">Weak Grip</option>
-                                    <option value="2">No Grip</option>
+                                <label for="patient-position">Patient Position</label>
+                                <select id="patient-position">
+                                    <option value="" disabled selected>Select Position...</option>
+                                    <option>Supine</option>
+                                    <option>Fowler's / Semi-Fowler's</option>
+                                    <option>Left Lateral Recumbent</option>
+                                    <option>Prone</option>
+                                    <option>Position of Comfort</option>
+                                    <option>Sitting</option>
+                                    <option>Standing</option>
                                 </select>
                             </div>
-                            <div class="text-center">
-                                <label>S-LAMS Score</label>
-                                <div id="slams-score" class="slams-score-display">0</div>
+                            <div>
+                                <label for="disposition">Incident/Patient Disposition</label>
+                                <select id="disposition">
+                                    <option value="" disabled selected>Select Disposition...</option>
+                                    <option>Patient Care Transferred to Another EMS Unit</option>
+                                    <option>Patient Refused Evaluation/Care (AMA)</option>
+                                    <option>Patient Treated, No Transport Required</option>
+                                    <option>No Patient Found</option>
+                                    <option>Cancelled on Scene</option>
+                                    <option>Standby/No Services or Support Required</option>
+                                    <option>Dead at Scene</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="transfer-to">EMS Agency</label>
+                                <input type="text" id="transfer-to" value="GPD EMS">
+                            </div>
+                            <div>
+                                <label for="hospital-destination">Hospital Destination</label>
+                                <select id="hospital-destination">
+                                    <option value="" disabled selected>Select Destination...</option>
+                                    <option>Westchester Medical Center</option>
+                                    <option>White Plains Hospital</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <label for="stroke-symptoms-resolved">Stroke/CVA Symptoms Resolved</label>
-                            <select id="stroke-symptoms-resolved">
-                                <option value="" disabled selected>Select Status...</option>
-                                <option>Yes</option>
-                                <option>No</option>
-                                <option>Unknown</option>
-                            </select>
+                    </div>
+                </div>
+
+                <!-- eNarrative Section -->
+                <div class="form-section">
+                    <h2 class="form-section-title">Narrative Generation</h2>
+                    <div>
+                        <label for="narrative-summary">Narrative</label>
+                        <textarea id="narrative-summary" rows="10" placeholder="Fill out the form above and click 'Generate' to create a base narrative."></textarea>
+                    </div>
+                    <!-- Button container -->
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button type="button" id="generate-narrative">Generate Narrative</button>
+                        <button type="button" id="refine-narrative" class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white" disabled>Refine with AI ✨</button>
+                    </div>
+
+                    <div class="mt-8 border-t pt-6">
+                        <label for="ai-narrative-summary" class="font-semibold text-lg text-gray-700">AI-Refined Narrative</label>
+                        <div id="ai-narrative-summary-container" class="mt-2 w-full p-4 min-h-[240px] bg-gray-50 border border-gray-200 rounded-lg text-gray-800">
+                            <p class="text-gray-500">The AI-refined narrative will appear here after you click the "Refine with AI" button.</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 border-t pt-6">
+                        <label for="ai-rationale-container" class="font-semibold text-lg text-gray-700">Clinical Rationale</label>
+                        <div id="ai-rationale-container" class="mt-2 w-full p-4 min-h-[120px] bg-gray-50 border border-gray-200 rounded-lg text-gray-800">
+                            <p class="text-gray-500">The clinical reasoning behind potential interventions will appear here after refining the narrative.</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="mt-6 border-t pt-6">
-                    <h3 class="font-semibold text-lg text-gray-700">Physical Exam Findings (Head-to-Toe)</h3>
-                    <div id="exam-findings-container" class="space-y-4 mt-2">
-                        <!-- Dynamic exam rows will be injected here -->
-                    </div>
-                    <button type="button" id="add-exam-finding" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Exam Finding</button>
-                </div>
             </div>
-        </div>
-
-        <!-- Interventions -->
-        <div class="form-section">
-            <h2 class="form-section-title collapsible-header">
-                <span class="flex justify-between items-center w-full">
-                    <span>R - Interventions (Rx)</span>
-                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-            </h2>
-            <div class="collapsible-content">
-                <div id="interventions-container" class="space-y-4">
-                    <!-- Dynamic intervention rows will be added here -->
-                </div>
-                <button type="button" id="add-intervention" class="mt-4 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Intervention</button>
-            </div>
-        </div>
-
-        <!-- Transfer of Care -->
-        <div class="form-section">
-            <h2 class="form-section-title collapsible-header">
-                <span class="flex justify-between items-center w-full">
-                    <span>T - Transfer of Care</span>
-                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-            </h2>
-            <div class="collapsible-content">
-                <div class="grid-container">
-                    <div>
-                        <label for="patient-move">Method of Movement</label>
-                        <select id="patient-move">
-                            <option value="" disabled selected>Select Method...</option>
-                            <option>Stretcher</option>
-                            <option>Stair Chair</option>
-                            <option>Carried</option>
-                            <option>Walked</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="patient-position">Patient Position</label>
-                        <select id="patient-position">
-                            <option value="" disabled selected>Select Position...</option>
-                            <option>Supine</option>
-                            <option>Fowler's / Semi-Fowler's</option>
-                            <option>Left Lateral Recumbent</option>
-                            <option>Prone</option>
-                            <option>Position of Comfort</option>
-                            <option>Sitting</option>
-                            <option>Standing</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="disposition">Incident/Patient Disposition</label>
-                        <select id="disposition">
-                            <option value="" disabled selected>Select Disposition...</option>
-                            <option>Patient Care Transferred to Another EMS Unit</option>
-                            <option>Patient Refused Evaluation/Care (AMA)</option>
-                            <option>Patient Treated, No Transport Required</option>
-                            <option>No Patient Found</option>
-                            <option>Cancelled on Scene</option>
-                            <option>Standby/No Services or Support Required</option>
-                            <option>Dead at Scene</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="transfer-to">EMS Agency</label>
-                        <input type="text" id="transfer-to" value="GPD EMS">
-                    </div>
-                    <div>
-                        <label for="hospital-destination">Hospital Destination</label>
-                        <select id="hospital-destination">
-                            <option value="" disabled selected>Select Destination...</option>
-                            <option>Westchester Medical Center</option>
-                            <option>White Plains Hospital</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- eNarrative Section -->
-        <div class="form-section">
-            <h2 class="form-section-title">Narrative Generation</h2>
-            <div>
-                <label for="narrative-summary">Narrative</label>
-                <textarea id="narrative-summary" rows="10" placeholder="Fill out the form above and click 'Generate' to create a base narrative."></textarea>
-            </div>
-            <!-- Button container -->
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button type="button" id="generate-narrative">Generate Narrative</button>
-                <button type="button" id="refine-narrative" class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white" disabled>Refine with AI ✨</button>
-            </div>
-
-            <div class="mt-8 border-t pt-6">
-                 <label for="ai-narrative-summary" class="font-semibold text-lg text-gray-700">AI-Refined Narrative</label>
-                 <div id="ai-narrative-summary-container" class="mt-2 w-full p-4 min-h-[240px] bg-gray-50 border border-gray-200 rounded-lg text-gray-800">
-                    <p class="text-gray-500">The AI-refined narrative will appear here after you click the "Refine with AI" button.</p>
-                 </div>
-            </div>
-             <div class="mt-8 border-t pt-6">
-                 <label for="ai-rationale-container" class="font-semibold text-lg text-gray-700">Clinical Rationale</label>
-                 <div id="ai-rationale-container" class="mt-2 w-full p-4 min-h-[120px] bg-gray-50 border border-gray-200 rounded-lg text-gray-800">
-                    <p class="text-gray-500">The clinical reasoning behind potential interventions will appear here after refining the narrative.</p>
-                 </div>
-            </div>
-        </div>
+        </main>
     </div>
 
     <script>
@@ -779,91 +794,92 @@
             const impressionData = {
                 "Abdominal": ["Acute pain", "Generalized pain"],
                 "Alcohol/Drug Exposure": ["Adverse effect of unspecified substance", "Alcohol intoxication", "Alcohol use", "Alcohol withdrawal", "Suspected Opioid related", "Other psychoactive substance", "Sedative, anti-anxiety related"],
-                "Cardiovascular": ["Angina (pain related to heart)", "Arrhythmia", "Cardiac arrest", "Cardiomyopathy", "Chest pain, non-cardiac", "Congestive Heart Failure", "Hypertension", "Hypotension", "Myocardial Infarction (Heart Attack)", "Palpitations", "Peripheral edema", "Syncope (fainting)"],
-                "Diabetic": ["Diabetic Ketoacidosis (DKA)", "Hyperglycemia", "Hypoglycemia"],
-                "Emotional State/Behavior": ["Agitated/excited delirium", "Anxiety", "Behavioral, other", "Depression", "Homicidal ideation", "Mania", "Person in behavioral crisis", "Psychosis", "Suicidal ideation", "Suicide attempt"],
-                "Environmental": ["Bites/stings", "Cold exposure/hypothermia", "Heat exposure/hyperthermia", "High altitude sickness", "Lightning strike", "Submersion (drowning/near drowning)"],
-                "General Illness": ["Fatigue/malaise", "Fever/chills", "Generalized weakness", "Illness, NOS", "Nausea", "Sepsis", "Shock", "Vomiting"],
-                "Infectious Disease": ["COVID-19", "Hepatitis", "HIV/AIDS", "Influenza-like illness", "Meningitis", "MRSA", "Tuberculosis"],
-                "Neurological": ["Altered mental status", "Dizziness/vertigo", "Headache/migraine", "Seizure", "Stroke/CVA", "TIA (transient ischemic attack)", "Weakness - one sided"],
-                "OB/GYN": ["Abnormal vaginal bleeding", "Ectopic pregnancy", "Labor", "Miscarriage", "Post-partum hemorrhage", "Sexual assault"],
-                "Other": ["Obvious Death", "Medical device complication"],
-                "Pain": ["Back pain, non-traumatic", "Chronic pain", "Pain, NOS", "Pelvic/perineal pain"],
+                "Cardiovascular": ["Angina (pain related to heart)", "Arrhythmia", "Cardiac arrest", "Chest pain, NOS", "Myocardial Infarction, NOS", "Heart failure", "Hypertension", "Hypotension", "Non-STEMI", "Other, unspecified CV disorder", "STEMI"],
+                "Digestive": ["Blood in vomit or stool (GI bleed)", "Constipation", "Diarrhea", "Nausea", "Vomiting"],
+                "Emotional State/Behavior": ["Anxiety", "Depression", "Homicidal ideation", "Intentional self-harm", "Mental illness, NOS", "Other emotional symptoms", "Other personality disorder", "Suicidal ideation", "Suicide attempt"],
+                "Endocrine/Urinary": ["Hyperglycemia", "Hyperglycemia, known diabetic", "Hypoglycemia", "Hypoglycemia, known diabetic", "Kidney failure, NOS", "Kidney/renal disease requiring dialysis", "Urinary tract infection (UTI)"],
+                "Illness": ["Fever", "General symptoms", "Illness, NOS", "Sepsis", "Unspecified infectious disease"],
+                "Injury": ["Ankle injury", "Burn, NOS", "Concussion, with LOC", "Concussion, without LOC", "Early complication of trauma", "Facial injury", "Foot injury", "Forearm injury", "Head injury", "Hemorrhage", "Hip injury", "Injury, unspecified", "Lower back injury", "Lower leg injury", "Multiple injuries", "Neck injury", "Pelvis injury", "Shoulder/upper arm injury", "Thigh injury", "Thorax injury", "Wrist/hand/finger injury"],
+                "Level of Consciousness": ["Altered mental status", "Altered mental status, transient", "Disoriented", "Fainting/collapse"],
+                "Malaise": ["Fatigue", "Malaise (feeling unwell)", "Muscle weakness", "Weakness"],
+                "Mobility": ["Bedridden", "Reduced mobility"],
+                "Neurological": ["Convulsions, NOS", "Lightheaded/vertigo", "Seizure, epileptic", "Seizure, NOS", "Seizure, status epilepticus", "Stroke", "TIA"],
+                "No Patient Complaint": ["Adult general exam, no finding", "Child general exam, no finding", "Encounter for aftercare", "Encounter, feared condition not observed", "General exam, no complaint", "General exam, NOS", "Observation only", "Psych exam, requested by authority"],
+                "Other": ["Abuse/Neglect NOS, suspected", "Allergic reaction, NOS", "Dehydration", "Heat related (heat stroke/exhaustion)", "New growth, tumor", "Obvious death"],
+                "Pain": ["Back pain, NOS", "Headache", "Limb/hand/foot/fingers/toes pain", "Lower back pain", "Pain, acute", "Pain, acute due to trauma", "Pain, chronic", "Pain, NOS", "Pelvic/perineal pain"],
                 "Reproductive System": ["Normal delivery", "Pregnancy related", "Vaginal bleeding, abnormal"],
-                "Respiratory": ["Asthma", "Bronchospasm, acute", "Common cold", "COPD", "Difficulty breathing", "Flu", "Fluid in lungs", "Nosebleed", "Pneumonia", "Respiratory distress", "Respiratory failure", "Respiratory, other", "Upper respiratory infection"],
-                "Trauma": ["Abrasion/friction burn", "Amputation", "Avulsion", "Burn, chemical", "Burn, electrical", "Burn, NOS", "Burn, thermal", "Contusion/bruise", "Crush injury", "Degloving", "Dislocation", "Dog bite", "Electrical injury", "Eye injury", "Facial trauma", "Foreign body obstruction", "Fracture, closed", "Fracture, open", "Gun shot wound", "Head injury", "Internal injury", "Laceration/cut", "Needle stick", "Puncture/penetrating", "Sprain/strain", "Stab wound", "Traumatic injury, NOS"]
+                "Respiratory": ["Asthma", "Bronchospasm, acute", "Common cold", "COPD", "Difficulty breathing", "Flu", "Fluid in lungs", "Nosebleed", "Pneumonia", "Respiratory distress", "Respiratory failure", "Respiratory, other disorder", "Shortness of breath"]
             };
 
             const examFindingsData = {
-                "Head (eExam.05)": {
-                    findings: ["Normocephalic/Atraumatic", "Battle's Sign", "Contusion/Bruising", "Crepitus", "Deformity", "Laceration", "Penetrating Injury", "Raccoon Eyes", "Soft Tissue Swelling", "Subcutaneous Emphysema"]
+                "Head": {
+                    findings: ["Normal", "Not Done", "Abrasion", "Avulsion", "Bleeding Controlled", "Bleeding Uncontrolled", "Burn-Blistering", "Burn-Charring", "Burn-Redness", "Burn-White/Waxy", "Contusion", "Crush Injury", "Decapitation", "Deformity", "Drainage", "Exam Finding Not Present", "Foreign Body", "Gunshot Wound", "Laceration", "Mass/Lesion", "Pain", "Puncture/Stab Wound", "Swelling", "Tenderness"]
                 },
-                "Face (eExam.06)": {
-                    findings: ["Symmetrical", "Asymmetrical", "Contusion/Bruising", "Droop", "Laceration", "Nasal Flaring", "Penetrating Injury", "Soft Tissue Swelling"]
+                "Face": {
+                    findings: ["Normal", "Not Done", "Abrasion", "Asymmetric Smile or Droop", "Avulsion", "Bleeding Controlled", "Bleeding Uncontrolled", "Burn-Blistering", "Burn-Charring", "Burn-Redness", "Burn-White/Waxy", "Contusion", "Crush Injury", "Deformity", "Drainage", "Exam Finding Not Present", "Foreign Body", "Gunshot Wound", "Laceration", "Mass/Lesion", "Pain", "Puncture/Stab Wound", "Swelling", "Tenderness"]
                 },
-                "Eyes (eExam.18)": {
-                    locations: ["Left", "Right", "Bilateral"],
-                    findings: ["PERRLA", "Pupils Equal and Reactive", "Pupils Unequal", "Pupils Sluggish", "Pupils Non-Reactive/Fixed", "Pupils Pinpoint", "Pupils Dilated", "Conjunctival Hemorrhage", "Foreign Body", "Nystagmus"]
+                "Eyes": {
+                    locations: ["Bilateral", "Left", "Right"],
+                    findings: ["Not Done", "1-mm", "2-mm", "3-mm", "4-mm", "5-mm", "6-mm", "7-mm", "8-mm or >", "Blind", "Cataract Present", "Clouded", "Contusion", "Deformity", "Dilated", "Dysconjugate Gaze", "Exam Finding Not Present", "Foreign Body", "Glaucoma Present", "Hyphema", "Jaundiced Sclera", "Missing", "Non-Reactive", "Non-Reactive Prosthetic", "Nystagmus Noted", "Open Globe", "Pain", "PERRL", "Pin Point", "Puncture/Stab Wound", "Pupil-Irregular/Teardrop", "Reactive", "Sluggish", "Swelling"]
                 },
-                "Neck (eExam.07)": {
-                    findings: ["No JVD", "JVD", "Trachea Midline", "Tracheal Deviation", "Accessory Muscle Use", "C-Spine Tenderness", "Contusion/Bruising", "Laceration", "Penetrating Injury", "Subcutaneous Emphysema"]
+                "Neck": {
+                    findings: ["Normal", "Not Done", "Abrasion", "Avulsion", "Bleeding Controlled", "Bleeding Uncontrolled", "Burn-Blistering", "Burn-Charring", "Burn-Redness", "Burn-White/Waxy", "Contusion", "Crush Injury", "Decapitation", "Deformity", "Exam Finding Not Present", "Foreign Body", "Gunshot Wound", "JVD", "Laceration", "Pain", "Puncture/Stab Wound", "Rash", "Stiffness", "Stridor", "Subcutaneous Air", "Swelling", "Tenderness", "Tracheal Deviation-Left", "Tracheal Deviation-Right"]
                 },
-                "Chest (eExam.25)": {
-                    locations: ["Left", "Right", "Bilateral", "Anterior", "Posterior", "Lateral"],
-                    findings: ["Symmetrical Rise and Fall", "Barrel Chest", "Contusion/Bruising", "Crepitus", "Deformity", "Flail Segment", "Intercostal Retractions", "Paradoxical Motion", "Penetrating Injury", "Sucking Chest Wound", "Subcutaneous Emphysema", "Tenderness"]
+                "Chest": {
+                    locations: ["General - Anterior", "General - Posterior", "Left - Anterior", "Left - Posterior", "Left - Side", "Right - Anterior", "Right - Posterior", "Right - Side"],
+                    findings: ["Normal", "Not Done", "Abrasion", "Accessory Muscles Used with Breathing", "Avulsion", "Bleeding Controlled", "Bleeding Uncontrolled", "Burn-Blistering", "Burn-Charing", "Burn-Redness", "Burn-White/Waxy", "Contusion", "Crush Injury", "Deformity", "Exam Finding Not Present", "Flail Segment", "Gunshot Wound", "Implanted Device", "Laceration", "Pain", "Pain with Inspiration/Expiration", "Puncture/Stab Wound", "Retraction", "Swelling", "Tenderness", "Tenderness-General"]
                 },
-                "Lungs (eExam.23)": {
-                    locations: ["Left Upper", "Left Lower", "Right Upper", "Right Middle", "Right Lower", "Bilateral"],
-                    findings: ["Clear and Equal Bilaterally", "Absent", "Diminished", "Rales/Crackles", "Rhonchi", "Wheezing", "Stridor"]
+                "Lungs": {
+                    locations: ["Bilateral", "Left", "Right"],
+                    findings: ["Normal", "Not Done", "Breath Sounds-Absent", "Breath Sounds-Decreased", "Breath Sounds-Equal", "Breath Sounds-Normal", "Exam Finding Not Present", "Foreign Body", "Increased Respiratory Effort", "Pain", "Pain with Inspiration/Expiration", "Rales", "Rhonchi", "Rhonchi/Wheezing", "Stridor", "Wheezing-Expiratory", "Wheezing-Inspiratory"]
                 },
-                "Heart (eExam.09)": {
-                    findings: ["Regular Rate and Rhythm", "Irregularly Irregular", "Regularly Irregular", "Bradycardia", "Tachycardia", "Distant/Muffled Tones"]
+                "Heart": {
+                    findings: ["Normal", "Not Done", "Clicks", "Exam Finding Not Present", "Heart Sounds Decreased", "Murmur-Diastolic", "Murmur-Systolic", "Rubs", "S1", "S2", "S3", "S4"]
                 },
-                "Abdomen (eExam.11)": {
-                    locations: ["RUQ", "LUQ", "RLQ", "LLQ", "Umbilical", "Epigastric", "Suprapubic", "Generalized"],
-                    findings: ["Soft and Non-Tender", "Tender", "Firm", "Distended", "Guarding", "Pulsatile Mass", "Rebound Tenderness", "Rigidity", "Bowel Sounds Present", "Bowel Sounds Absent/Hypoactive", "Contusion/Bruising", "Evisceration"]
+                "Back and Spine": {
+                    locations: ["Back-General", "Cervical-Left", "Cervical-Midline", "Cervical-Right", "Lumbar-Left", "Lumbar-Midline", "Lumbar-Right", "Sacral-Left", "Sacral-Midline", "Sacral-Right", "Thoracic-Left", "Thoracic-Midline", "Thoracic-Right"],
+                    findings: ["Normal", "Not Done", "Abrasion", "Avulsion", "Bleeding Controlled", "Bleeding Uncontrolled", "Burn-Blistering", "Burn-Charring", "Burn-Redness", "Burn-White/Waxy", "Contusion", "Crush Injury", "Deformity", "Exam Finding Not Present", "Foreign Body", "Gunshot Wound", "Laceration", "Pain", "Pain with Range of Motion", "Puncture/Stab Wound", "Swelling", "Tenderness", "Tenderness Costovertebral Angle", "Tenderness Midline Spinous Process", "Tenderness Paraspinous"]
                 },
-                "Pelvis/GU (eExam.12)": {
-                    findings: ["Stable", "Unstable", "Bleeding", "Contusion/Bruising", "Crepitus", "Deformity", "Incontinence", "Priapism"]
+                "Abdomen": {
+                    locations: ["Epigastric", "Generalized", "Left Lower Quadrant", "Left Upper Quadrant", "Periumbilical", "Right Lower Quadrant", "Right Upper Quadrant"],
+                    findings: ["Normal", "Not Done", "Abrasion", "Avulsion", "Bleeding Controlled", "Bleeding Uncontrolled", "Bowel Sounds-Absent", "Bowel Sounds-Present", "Burn-Blistering", "Burn-Charring", "Burn-Redness", "Burn-White/Waxy", "Contusion", "Crush Injury", "Deformity", "Distention", "Exam Finding Not Present", "Foreign Body", "Guarding", "Gunshot Wound", "Laceration", "Mass/Lesion", "Mass-Pulsating", "Pain", "Pregnant-Palpable Uterus", "Puncture/Stab Wound", "Rash", "Rebound Tenderness", "Rigidity", "Swelling", "Tenderness"]
                 },
-                "Back/Spine (eExam.14)": {
-                    locations: ["Cervical", "Thoracic", "Lumbar", "Sacral"],
-                    findings: ["Atraumatic", "Contusion/Bruising", "Deformity", "Laceration", "Step-Off Deformity", "Tenderness"]
+                "Pelvis/Genitourinary": {
+                    findings: ["Normal", "Not Done", "Abrasion", "Avulsion", "Bleeding Controlled", "Bleeding Uncontrolled", "Bleeding-Rectal", "Bleeding-Urethral", "Bleeding-Vaginal", "Burn-Blistering", "Burn-Charring", "Burn-Redness", "Burn-White/Waxy", "Contusion", "Crush Injury", "Deformity", "Discharge", "Exam Finding Not Present", "Foreign Body", "Genital Injury", "Gunshot Wound", "Laceration", "Mass/Lesion", "Pain", "Pelvic Fracture", "Pelvic Instability", "Penile Priapism/Erection", "Pregnant-Crowning", "Puncture/Stab Wound", "Swelling", "Tenderness"]
                 },
-                "Extremities (eExam.16)": {
-                    locations: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
-                    findings: ["No Gross Deformity", "Abrasion", "Amputation", "Contusion/Bruising", "Crepitus", "Cyanosis", "Deformity", "Edema", "Laceration", "Open Fracture", "Pallor", "Paralysis", "Paresis (Weakness)", "Pulses Present and Equal", "Pulses Absent/Diminished", "Capillary Refill < 2s", "Capillary Refill > 2s"]
+                "Extremities": {
+                    locations: ["Ankle-Left", "Ankle-Right", "Arm-Lower-Left", "Arm-Lower-Right", "Arm-Upper-Left", "Arm-Upper-Right", "Elbow-Left", "Elbow-Right", "Finger-2nd (Index)-Left", "Finger-2nd (Index)-Right", "Finger-3rd (Middle)-Left", "Finger-3rd (Middle)-Right", "Finger-4th (Ring)-Left", "Finger-4th (Ring)-Right", "Finger-5th (Smallest)-Left", "Finger-5th (Smallest)-Right", "Foot-Dorsal-Left", "Foot-Dorsal-Right", "Foot-Plantar-Left", "Foot-Plantar-Right", "Hand-Dorsal-Left", "Hand-Dorsal-Right", "Hand-Palm-Left", "Hand-Palm-Right", "Hip-Left", "Hip-Right", "Knee-Left", "Knee-Right", "Leg-Lower-Left", "Leg-Lower-Right", "Leg-Upper-Left", "Leg-Upper-Right", "Patella-Left", "Patella-Right", "Shoulder-Left", "Shoulder-Right", "Thumb-Left", "Thumb-Right", "Toe-1st (Big)-Left", "Toe-1st (Big)-Right", "Toe-2nd-Left", "Toe-2nd-Right", "Toe-3rd-Left", "Toe-3rd-Right", "Toe-4th-Left", "Toe-4th-Right", "Toe-5th (Smallest)-Left", "Toe-5th (Smallest)-Right", "Wrist-Left", "Wrist-Right"],
+                    findings: ["Normal", "Not Done", "Abrasion", "Amputation-Acute", "Amputation-Previous", "Arm Drift", "Avulsion", "Bleeding Controlled", "Bleeding Uncontrolled", "Burn-Blistering", "Burn-Charring", "Burn-Redness", "Burn-White/Waxy", "Clubbing (of fingers)", "Contusion", "Crush Injury", "Deformity", "Dislocation", "Edema", "Exam Finding Not Present", "Foreign Body", "Fracture-Closed", "Fracture-Open", "Gunshot Wound", "Laceration", "Motor Function-Abnormal/Weakness", "Motor Function-Absent", "Motor Function-Normal", "Pain", "Paralysis", "Pulse-Abnormal", "Pulse-Absent", "Pulse-Normal", "Puncture/Stab Wound", "Sensation-Abnormal", "Sensation-Absent", "Sensation-Normal", "Swelling", "Tenderness"]
                 },
-                "Skin (eExam.04)": {
-                    findings: ["Warm, Pink, and Dry", "Ashen", "Cool/Cold", "Clammy/Diaphoretic", "Cyanotic", "Flushed", "Hot", "Jaundiced", "Mottled", "Pale", "Poor Turgor"]
+                "Skin": {
+                    findings: ["Normal", "Not Done", "Capillary Nail Bed Refill 2-4 seconds", "Capillary Nail Bed Refill less than 2 seconds", "Capillary Nail Bed Refill more than 4 seconds", "Clammy", "Cold", "Cyanotic", "Diaphoretic", "Dry", "Exam Finding Not Present", "Flushed", "Hot", "Jaundiced", "Lividity", "Mottled", "Pale", "Poor Turgor", "Red (Erythematous)", "Tenting", "Warm"]
                 },
-                 "Mental Status (eExam.19)": {
-                    findings: ["Alert", "Appropriate", "Agitated", "Anxious", "Calm", "Combative", "Confused", "Cooperative", "Depressed", "Disoriented", "Distracted", "Distraught", "Hallucinations", "Hostile", "Inappropriate", "Lethargic", "Paranoid", "Sad", "Stupor", "Unresponsive", "Verbal"]
+                "Neurological": {
+                    findings: ["Normal Baseline for Patient", "Not Done", "Aphagia", "Aphasia", "Arm Drift-Left", "Arm Drift-Right", "Cerebellar Function-Abnormal", "Cerebellar Function-Normal", "Decerebrate Posturing", "Decorticate Posturing", "Exam Finding Not Present", "Gait-Abnormal", "Gait-Normal", "Hemiplegia-Left", "Hemiplegia-Right", "Other Seizures", "Speech Normal", "Speech Slurring", "Status Seizure", "Strength-Asymmetric", "Strength-Normal", "Strength-Symmetric", "Tremors", "Weakness-Facial Droop-Left", "Weakness-Facial Droop-Right", "Weakness-Left Sided", "Weakness-Right Sided"]
                 },
-                "Neurological (eExam.20)": {
-                    findings: ["Normal", "Facial Droop", "Arm Drift", "Speech Slurred/Aphasic", "Gait Ataxic/Unsteady", "Seizure Activity", "Paresthesia (Numbness/Tingling)", "Weakness - Unilateral", "Weakness - Bilateral"]
+                "Mental Status": {
+                    findings: ["Normal Baseline for Patient", "Not Done", "Agitation", "Altered mental status, unspecified", "Combative", "Confused", "Developmentally Impaired", "Disorientation, unspecified", "Exam Finding Not Present", "Hallucinations", "Oriented-Event", "Oriented-Person", "Oriented-Place", "Oriented-Time", "Pharmacologically Paralyzed", "Pharmacologically Sedated", "Psychologically Impaired", "Slowness and poor responsiveness", "Somnolent", "State of emotional shock and stress, unspecified", "Strange and inexplicable behavior", "Stupor", "Uncooperative", "Unresponsive", "Unspecified coma"]
                 }
             };
 
              const symptomData = {
-                "Abdominal": ["Abdominal pain", "Distended abdomen", "Lower abdominal pain", "Nausea", "Stomach cramps", "Upper abdominal pain"],
-                "Alcohol/Drug Exposure": ["Alcohol intoxication", "Apparent drug classification", "Drug/medication", "Ingestion", "Inorganic substance use", "Poisoning", "Unspecified drugs/substance"],
-                "Cardiovascular": ["Angina/chest pain", "Atrial fibrillation, NOS", "Cardiac arrest", "General heart problem", "Hypertension", "Hypotension", "Myocardial infarction, NOS", "Palpitations", "STEMI, NOS"],
+                "Abdominal": ["Acute pain", "Generalized pain", "Lower abdominal pain", "Tenderness", "Unspecified pain", "Upper abdominal pain"],
+                "Alcohol/Drug Exposure": ["Alcohol use with intoxication", "Alcohol use", "Inorganic substance use", "Narcotic use", "Unspecified drugs/substance"],
+                "Cardiovascular": ["Angina, NOS", "Arrhythmia", "Atrial fibrillation, NOS", "Cardiac arrest", "Hypertension", "Hypotension", "Myocardial infarction, NOS", "Palpitations", "STEMI, NOS"],
                 "Digestive": ["Abdominal distention/bloating", "Constipation", "Diarrhea", "Nausea", "Vomiting", "Vomiting blood"],
-                "Emotional State/Behavior": ["Anxiety", "Depression", "Emotional shock/stress", "Mental illness, NOS", "Nervousness", "Psych search", "Restless/agitated", "Reduced responsiveness", "Strange/unreasonable behavior", "Suicidal ideation", "Suicide attempt", "Worries"],
-                "Endocrine/Urinary": ["Chronic kidney disease", "Diabetic complications", "Hyperglycemia", "Hypoglycemia", "Pain upon urination", "Urination problem"],
-                "General/Systemic": ["Body fluid discharge"],
+                "Emotional State/Behavior": ["Anxiety", "Depression", "Emotional shock/stress", "Mental illness, NOS", "Nervousness", "Overactivity", "Restless/agitated", "Slowness/poor responsiveness", "Strange/inexplicable behavior", "Suicidal ideation", "Violent behavior", "Worries"],
+                "Endocrine/Urinary": ["Chronic kidney disease", "Diabetic complications", "Hyperglycemia", "Hypoglycemia", "Pain upon urination", "Unable to urinate", "Uremia (on dialysis)"],
                 "Illness": ["Fever, NOS", "General symptoms, NOS", "Illness, NOS", "Undefined/unknown"],
-                "Injury": ["Facial injury", "Head injury", "Head/face/eye, NOS", "Impalement injury", "Injury, NOS", "Major area injury", "Multiple injuries, NOS", "Probable human/animal injury", "Undefined/unknown injury"],
-                "Level of Consciousness": ["Altered mental status, NOS", "Altered mental status, transient", "Disoriented, NOS", "Drowsy/lethargic", "Not alert/awake", "Unconscious, NOS"],
-                "Malaise": ["Fainting, NOS", "Malaise, NOS", "Weakness"],
-                "Neurological": ["Dizziness, NOS", "Epileptic seizure/syndrome", "General seizure/fit", "Lightheaded/vertigo", "Seizure, NOS", "Seizure search", "Stroke"],
-                "Nervous/Musculoskeletal": ["Abnormal gait/mobility", "Abnormal/involuntary movements", "Cramp/spasm", "Difficulty talking", "Facial weakness", "Other nervous symptoms", "Paralysis, NOS"],
-                "No Patient Complaint": ["Abuse/Neglect, NOS, suspected", "Assault on other, no finding", "Child encounter, no finding", "Exposure to pathogen, no finding", "Patient found, no complaint"],
-                "Pain": ["Acute pain due to trauma", "Back pain, NOS", "Chest pain (not angina)", "Chest pain, NOS", "Ear pain", "Facial pain", "Headache", "Hip pain", "Knee pain", "Limb/hand/foot/fingers/toes pain", "Lower back pain", "Neck pain", "Other pain", "Pain, NOS", "Pelvic/perineal pain", "Rib pain", "Shoulder pain"],
+                "Injury": ["Facial injury", "Head injury", "Hemorrhage, NOS", "Hip/thigh injury", "Injury, NOS", "Lower leg injury", "Multiple injuries, NOS", "Shoulder/upper arm injury", "Wrist/hand/finger injury"],
+                "Level of Consciousness": ["Altered mental status, NOS", "Altered mental status, transient", "Disoriented, NOS", "Drowsiness", "Fainting/collapse", "Unconscious, NOS"],
+                "Malaise": ["Fatigue, NOS", "Malaise, NOS", "Weakness"],
+                "Neurological": ["Convulsions, NOS", "Epileptic seizure/syndrome", "Febrile convulsions", "Lightheaded/vertigo", "Seizure, NOS", "Slurred speech", "Stroke"],
+                "Nervous/Musculoskeletal": ["Abnormal gait/mobility", "Abnormal involuntary movements", "Cramp/spasm", "Difficulty walking", "Facial weakness", "Other symptoms, NOS", "Repeated falls"],
+                "No Patient Complaint": ["Abuse/Neglect NOS, suspected", "Adult encounter, no finding", "Child encounter, no finding", "Feared condition not observed", "General exam, no complaint"],
+                "Pain": ["Acute pain due to trauma", "Back pain, NOS", "Chest pain (not angina)", "Chest pain, NOS", "Eye pain", "Facial pain", "Headache", "Hip pain", "Knee pain", "Limb/hand/foot/fingers/toes pain", "Lower back pain", "Neck pain", "Pain, chronic", "Pain, NOS", "Pelvic/perineal pain", "Rib pain", "Shoulder pain"],
                 "Reproductive System": ["Vaginal bleeding, NOS"],
-                "Respiratory": ["Abnormal breathing", "Choking", "Cough, NOS", "Croup", "Difficulty breathing", "Nosebleed", "Noisy breathing", "Pain upon/difficulty of breathing", "Pain in throat", "Partial breathing", "Periodic breathing", "Respiratory arrest", "Respiratory distress", "Shortness of breath", "Wheezing"],
-                "Skin": ["Cold/sweaty", "Edema", "Localized swelling/mass/lump", "Pale/flushed", "Other skin changes", "Rash"]
+                "Respiratory": ["Abnormal breathing", "Choking", "COPD, NOS", "Cough", "Difficulty breathing", "Nosebleed", "Not breathing", "Other abnormalities of breathing", "Pain in throat", "Painful breathing", "Periodic breathing", "Respiratory arrest", "Respiratory distress", "Shortness of breath", "Wheezing"],
+                "Skin": ["Edema", "Localized swelling/mass/lump", "Numbness", "Other skin changes", "Rash"]
             };
         
             function createMedicationRow() {
@@ -1021,7 +1037,7 @@
                 Object.keys(examFindingsData).forEach(key => {
                     const option = document.createElement('option');
                     option.value = key;
-                    option.textContent = key.replace(/\s\(eExam\.\d+\)/, ''); // Clean up text for display
+                    option.textContent = key;
                     groupSelect.appendChild(option);
                 });
 
@@ -1547,7 +1563,7 @@
                     const findingSelect = row.querySelector('.exam-finding');
 
                     if (groupSelect.selectedIndex > 0 && findingSelect.selectedIndex > 0) {
-                        let findingText = `${groupSelect.options[groupSelect.selectedIndex].text.split('(')[0].trim()}: `;
+                        let findingText = `${groupSelect.options[groupSelect.selectedIndex].text}: `;
                         if (!locationSelect.hidden && locationSelect.selectedIndex > 0) {
                             findingText += `${locationSelect.options[locationSelect.selectedIndex].text} - `;
                         }
