@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Department ePCR Narrative</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1d4ed8"/>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/1d4ed8/white?text=ePCR">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-section {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .form-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .collapsible-header {
+            cursor: pointer;
+        }
+        .chevron-icon {
+            transition: transform 0.3s ease;
+        }
+        .collapsible-header.collapsed .chevron-icon {
+            transform: rotate(-180deg);
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        select, input, textarea, button {
+            width: 100%;
+            padding: 0.5rem 0.75rem; /* Reduced vertical padding */
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            background-color: #ffffff;
+            transition: all 0.2s;
+        }
+        /* Style checkboxes differently from text inputs */
+        input[type="checkbox"] {
+            width: auto;
+            border-radius: 0.25rem;
+        }
+        input[type="checkbox"]:focus {
+            box-shadow: none;
+            ring: 2px;
+            ring-offset: 2px;
+            ring-blue-500;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+        button {
+            background-color: #3b82f6; /* Lighter blue for primary button */
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2563eb; /* Slightly darker blue on hover */
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 1rem; /* Reduced gap */
+        }
+        @media (min-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+         @media (min-width: 1024px) {
+            .grid-container {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+             .grid-container-4 {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+        .medication-row {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background-color: #fff;
+        }
+         .history-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+         }
+         .exam-row {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background-color: #fff;
+         }
+        @media (min-width: 1024px) {
+            .exam-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+         .history-description-display {
+            grid-column: 1 / -1;
+            font-size: 0.875rem;
+            color: #4b5563;
+            background-color: #f3f4f6;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            min-height: 2.5rem;
+            margin-top: 0.5rem;
+         }
+        .suggestions-list {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-top: none;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            border-radius: 0 0 0.5rem 0.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .suggestions-list li {
+            padding: 0.75rem;
+            cursor: pointer;
+        }
+        .suggestions-list li:hover {
+            background-color: #f3f4f6;
+        }
+        .slams-score-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Fire Department Patient Care Report</h1>
+            <p class="text-gray-500 mt-1">Non-Transporting First Response (CHART Format)</p>
+        </header>
+        
+        <!-- Chief Complaint & Situation -->
+        <div class="form-section">
+            <h2 class="form-section-title collapsible-header">
+                <span class="flex justify-between items-center w-full">
+                    <span>C - Chief Complaint & Situation</span>
+                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </span>
+            </h2>
+            <div class="collapsible-content">
+                <!-- Patient & Dispatch Info -->
+                <h3 class="font-semibold text-lg text-gray-700 mb-3">Scene Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="dispatch-reason">Dispatch Reason</label>
+                        <input type="text" id="dispatch-reason" placeholder="e.g., Difficulty Breathing">
+                    </div>
+                    <div>
+                        <label for="first-unit-on-scene">First Unit on Scene?</label>
+                        <select id="first-unit-on-scene">
+                            <option value="" disabled selected>Select Yes or No...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="patient-age">Patient Age</label>
+                        <input type="number" id="patient-age" placeholder="e.g., 68">
+                    </div>
+                    <div>
+                        <label for="patient-gender">Patient Gender</label>
+                        <select id="patient-gender">
+                            <option value="" disabled selected>Select Gender...</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Non-binary</option>
+                            <option>Unknown</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="patient-found-location">Patient Found Location</label>
+                        <input type="text" id="patient-found-location" placeholder="e.g., sitting on edge of bed">
+                    </div>
+                </div>
+
+                <!-- EMS Reason for Encounter -->
+                <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Signs & Symptoms (S)</h3>
+                <div class="space-y-6">
+                    <div>
+                        <label for="possible-injury">Event Type</label>
+                        <select id="possible-injury">
+                            <option value="" disabled selected>Select event type...</option>
+                            <option value="No">Medical</option>
+                            <option value="Yes">Trauma</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="patient-chief-complaint">Patient's Chief Complaint</label>
+                        <input type="text" id="patient-chief-complaint" placeholder="e.g., 'My chest hurts and I can't breathe.'">
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-2">Patient's Stated Symptoms (Categorized)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="symptom-parent">Category</label>
+                                <select id="symptom-parent">
+                                    <option value="" disabled selected>Select...</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="symptom-description">Description</label>
+                                <select id="symptom-description" disabled>
+                                    <option value="" disabled selected>Select...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-2">Chief Complaint Details</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="anatomic-location">Anatomic Location</label>
+                                <select id="anatomic-location">
+                                    <option value="" disabled selected>Select...</option>
+                                    <option>Head</option>
+                                    <option>Neck</option>
+                                    <option>Chest</option>
+                                    <option>Abdomen</option>
+                                    <option>Back</option>
+                                    <option>Pelvis/GU</option>
+                                    <option>Upper Extremity</option>
+                                    <option>Lower Extremity</option>
+                                    <option>Generalized</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="organ-system">Organ System</label>
+                                <select id="organ-system">
+                                    <option value="" disabled selected>Select...</option>
+                                    <option>Cardiovascular</option>
+                                    <option>Respiratory</option>
+                                    <option>Neurological</option>
+                                    <option>Gastrointestinal</option>
+                                    <option>Genitourinary</option>
+                                    <option>Musculoskeletal</option>
+                                    <option>Integumentary (Skin)</option>
+                                    <option>Endocrine</option>
+                                    <option>Behavioral</option>
+                                    <option>Other/Not Applicable</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trauma Specific Fields (Conditional) -->
+                <div id="trauma-fields" class="hidden mt-6">
+                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Trauma Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="cause-injury-category">Cause of Injury Category</label>
+                            <select id="cause-injury-category">
+                                <option value="" disabled selected>Select Category...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="cause-injury-specific">Specific Cause</label>
+                            <select id="cause-injury-specific" disabled>
+                                <option value="" disabled selected>Select Specific Cause...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Provider's First Impression Section -->
+                <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Provider's First Impression</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="impression-parent">Impression - Category</label>
+                        <select id="impression-parent">
+                            <option value="" disabled selected>Select Category...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="impression-description">Impression - Description</label>
+                        <select id="impression-description" disabled>
+                            <option value="" disabled selected>Select Description...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="form-section">
+             <h2 class="form-section-title collapsible-header">
+                <span class="flex justify-between items-center w-full">
+                    <span>H - History (SAMPLE)</span>
+                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </span>
+            </h2>
+            <div class="collapsible-content">
+                <!-- A - Allergies -->
+                <h3 class="font-semibold text-lg text-gray-700 mb-3">Allergies (A)</h3>
+                <div class="grid-container">
+                    <div>
+                        <label for="medication-allergies">Known Medication Allergies</label>
+                        <input type="text" id="medication-allergies" placeholder="e.g., Penicillin (rash)">
+                    </div>
+                    <div>
+                        <label for="food-allergies">Known Environmental/Food Allergies</label>
+                        <input type="text" id="food-allergies" placeholder="e.g., Peanuts, None reported">
+                    </div>
+                </div>
+                
+                <!-- M - Medications -->
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Current Medications (M)</h3>
+                    <div id="medications-container" class="space-y-4">
+                        <!-- Dynamic medication rows will be injected here -->
+                    </div>
+                    <button type="button" id="add-medication" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Medication</button>
+                </div>
+
+                <!-- P - Past History -->
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Past Medical History (P)</h3>
+                    <div class="mt-4">
+                        <label>Medical/Surgical History</label>
+                        <div id="medical-history-container" class="space-y-4">
+                            <!-- Dynamic history rows will be injected here -->
+                        </div>
+                        <button type="button" id="add-history" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Medical History</button>
+                    </div>
+                    <div class="grid-container mt-4">
+                        <div>
+                            <label for="pregnancy">Pregnancy</label>
+                            <select id="pregnancy">
+                                <option value="" disabled selected>Select Status...</option>
+                                <option>No</option>
+                                <option>Yes, Confirmed Less Than 20 Weeks</option>
+                                <option>Yes, Confirmed Greater Than 20 Weeks</option>
+                                <option>Yes, Unknown Gestational Weeks</option>
+                                <option>Unknown</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="substance-use">Alcohol/Drug Use Indicators</label>
+                            <select id="substance-use">
+                                <option value="" disabled selected>Select Indicator...</option>
+                                <option>None Reported</option>
+                                <option>Patient Admits to Alcohol Use</option>
+                                <option>Patient Admits to Drug Use</option>
+                                <option>Patient Admits to Alcohol and Drug Use</option>
+                                <option>Odor of Alcoholic Beverage on Breath</option>
+                                <option>Drug Paraphernalia on Scene</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- L - Last Oral Intake -->
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Last Oral Intake (L)</h3>
+                    <div>
+                        <label for="last-oral-intake">Last Known Well/Last Oral Intake</label>
+                        <input type="datetime-local" id="last-oral-intake">
+                    </div>
+                </div>
+                
+                <!-- E - Events Leading Up To -->
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg text-gray-700 mb-3">Events Leading Up To (E)</h3>
+                    <div>
+                        <label for="events-leading-up-to">Describe the events leading up to the incident</label>
+                        <textarea id="events-leading-up-to" rows="4" placeholder="e.g., Patient was watching TV when they suddenly felt dizzy..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Assessment -->
+        <div class="form-section">
+            <h2 class="form-section-title collapsible-header">
+                <span class="flex justify-between items-center w-full">
+                    <span>A - Assessment & Vitals</span>
+                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </span>
+            </h2>
+            <div class="collapsible-content">
+                <!-- Primary Survey -->
+                <h3 class="font-semibold text-lg text-gray-700 mb-3">Initial Patient Assessment (Primary Survey)</h3>
+                <div class="grid-container mb-6">
+                    <div>
+                        <label for="avpu">Level of Consciousness (AVPU)</label>
+                        <select id="avpu">
+                            <option value="" disabled selected>Select AVPU...</option>
+                            <option value="Alert">Alert</option>
+                            <option value="Verbal">Responds to Verbal</option>
+                            <option value="Painful">Responds to Pain</option>
+                            <option value="Unresponsive">Unresponsive</option>
+                        </select>
+                    </div>
+                     <div id="mental-status-container" class="hidden">
+                        <label>Patient's Mental Status/Orientation</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 items-center gap-x-4 gap-y-2 p-3 bg-white border rounded-lg">
+                            <div class="flex items-center">
+                                <input id="oriented-person" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
+                                <label for="oriented-person" class="ml-2 font-normal text-gray-900">Person</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="oriented-place" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
+                                <label for="oriented-place" class="ml-2 font-normal text-gray-900">Place</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="oriented-time" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
+                                <label for="oriented-time" class="ml-2 font-normal text-gray-900">Time</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="oriented-event" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 orientation-checkbox">
+                                <label for="oriented-event" class="ml-2 font-normal text-gray-900">Event</label>
+                            </div>
+                            <div id="orientation-status" class="sm:ml-auto text-center sm:text-right font-semibold text-gray-700">A+O x 0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label for="gcs-eye">GCS - Eye</label>
+                        <select id="gcs-eye" class="gcs-component">
+                            <option value="0" disabled selected>Select Eye Response...</option>
+                            <option value="4">4 - Spontaneous</option>
+                            <option value="3">3 - To Voice</option>
+                            <option value="2">2 - To Pain</option>
+                            <option value="1">1 - None</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="gcs-verbal">GCS - Verbal</label>
+                        <select id="gcs-verbal" class="gcs-component">
+                            <option value="0" disabled selected>Select Verbal Response...</option>
+                            <option value="5">5 - Oriented</option>
+                            <option value="4">4 - Confused</option>
+                            <option value="3">3 - Inappropriate Words</option>
+                            <option value="2">2 - Incomprehensible</option>
+                            <option value="1">1 - None</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="gcs-motor">GCS - Motor</label>
+                        <select id="gcs-motor" class="gcs-component">
+                            <option value="0" disabled selected>Select Motor Response...</option>
+                            <option value="6">6 - Obeys Commands</option>
+                            <option value="5">5 - Localizes Pain</option>
+                            <option value="4">4 - Withdraws from Pain</option>
+                            <option value="3">3 - Flexion to Pain</option>
+                            <option value="2">2 - Extension to Pain</option>
+                            <option value="1">1 - None</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Vitals -->
+                <h3 class="font-semibold text-lg text-gray-700 mb-3 mt-6 border-t pt-6">Vital Signs</h3>
+                <div class="grid-container grid-container-4">
+                    <div>
+                        <label for="heart-rate">Heart Rate</label>
+                        <input type="number" id="heart-rate" placeholder="bpm">
+                    </div>
+                    <div>
+                        <label for="bp-systolic">Systolic BP</label>
+                        <input type="number" id="bp-systolic" placeholder="mmHg">
+                    </div>
+                    <div>
+                        <label for="bp-diastolic">Diastolic BP</label>
+                        <input type="number" id="bp-diastolic" placeholder="mmHg">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label for="resp-rate">Resp. Rate</label>
+                            <input type="number" id="resp-rate" placeholder="breaths/min">
+                        </div>
+                        <div>
+                            <label for="resp-effort">Effort</label>
+                            <select id="resp-effort">
+                                <option selected>Normal</option>
+                                <option>Shallow</option>
+                                <option>Labored</option>
+                                <option>Gasping</option>
+                                <option>Accessory Muscle Use</option>
+                                <option>Retractions</option>
+                                <option>Nasal Flaring</option>
+                                <option>Tripoding</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="spo2">SpO2</label>
+                        <input type="number" id="spo2" placeholder="%">
+                    </div>
+                    <div>
+                        <label for="blood-glucose">Blood Glucose</label>
+                        <input type="number" id="blood-glucose" placeholder="mg/dL">
+                    </div>
+                    <div>
+                        <label for="pain-scale-score">Pain Score</label>
+                        <input type="number" id="pain-scale-score" min="0" max="10" placeholder="0-10">
+                    </div>
+                </div>
+
+                <!-- Stroke Scale -->
+                <div class="mt-6 border-t pt-6">
+                    <div class="flex items-center mb-4">
+                        <input id="suspected-stroke-checkbox" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="suspected-stroke-checkbox" class="ml-2 text-lg font-semibold text-gray-700">Suspected Stroke?</label>
+                    </div>
+                    <div id="slams-section" class="hidden">
+                        <h4 class="font-medium text-gray-800 mb-3">S-LAMS Stroke Scale</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <div>
+                                <label for="slams-facial">Facial Droop</label>
+                                <select id="slams-facial" class="slams-component">
+                                    <option value="0">Absent</option>
+                                    <option value="1">Present</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="slams-arm">Arm Drift</label>
+                                <select id="slams-arm" class="slams-component">
+                                    <option value="0">Absent</option>
+                                    <option value="1">Drifts Down</option>
+                                    <option value="2">Falls Rapidly</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="slams-speech">Speech Deficit</label>
+                                <select id="slams-speech" class="slams-component">
+                                    <option value="0">Normal</option>
+                                    <option value="1">Present</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="slams-grip">Grip Strength</label>
+                                <select id="slams-grip" class="slams-component">
+                                    <option value="0">Normal</option>
+                                    <option value="1">Weak Grip</option>
+                                    <option value="2">No Grip</option>
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <label>S-LAMS Score</label>
+                                <div id="slams-score" class="slams-score-display">0</div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label for="stroke-symptoms-resolved">Stroke/CVA Symptoms Resolved</label>
+                            <select id="stroke-symptoms-resolved">
+                                <option value="" disabled selected>Select Status...</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 border-t pt-6">
+                    <h3 class="font-semibold text-lg text-gray-700">Physical Exam Findings (Head-to-Toe)</h3>
+                    <div id="exam-findings-container" class="space-y-4 mt-2">
+                        <!-- Dynamic exam rows will be injected here -->
+                    </div>
+                    <button type="button" id="add-exam-finding" class="mt-2 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Exam Finding</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interventions -->
+        <div class="form-section">
+            <h2 class="form-section-title collapsible-header">
+                <span class="flex justify-between items-center w-full">
+                    <span>R - Interventions (Rx)</span>
+                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </span>
+            </h2>
+            <div class="collapsible-content">
+                <div id="interventions-container" class="space-y-4">
+                    <!-- Dynamic intervention rows will be added here -->
+                </div>
+                <button type="button" id="add-intervention" class="mt-4 w-auto px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white">Add Intervention</button>
+            </div>
+        </div>
+
+        <!-- Transfer of Care -->
+        <div class="form-section">
+            <h2 class="form-section-title collapsible-header">
+                <span class="flex justify-between items-center w-full">
+                    <span>T - Transfer of Care</span>
+                    <svg class="w-6 h-6 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </span>
+            </h2>
+            <div class="collapsible-content">
+                <div class="grid-container">
+                    <div>
+                        <label for="patient-move">Method of Movement</label>
+                        <select id="patient-move">
+                            <option value="" disabled selected>Select Method...</option>
+                            <option>Stretcher</option>
+                            <option>Stair Chair</option>
+                            <option>Carried</option>
+                            <option>Walked</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="patient-position">Patient Position</label>
+                        <select id="patient-position">
+                            <option value="" disabled selected>Select Position...</option>
+                            <option>Supine</option>
+                            <option>Fowler's / Semi-Fowler's</option>
+                            <option>Left Lateral Recumbent</option>
+                            <option>Prone</option>
+                            <option>Position of Comfort</option>
+                            <option>Sitting</option>
+                            <option>Standing</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="disposition">Incident/Patient Disposition</label>
+                        <select id="disposition">
+                            <option value="" disabled selected>Select Disposition...</option>
+                            <option>Patient Care Transferred to Another EMS Unit</option>
+                            <option>Patient Refused Evaluation/Care (AMA)</option>
+                            <option>Patient Treated, No Transport Required</option>
+                            <option>No Patient Found</option>
+                            <option>Cancelled on Scene</option>
+                            <option>Standby/No Services or Support Required</option>
+                            <option>Dead at Scene</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="transfer-to">EMS Agency</label>
+                        <input type="text" id="transfer-to" value="GPD EMS">
+                    </div>
+                    <div>
+                        <label for="hospital-destination">Hospital Destination</label>
+                        <select id="hospital-destination">
+                            <option value="" disabled selected>Select Destination...</option>
+                            <option>Westchester Medical Center</option>
+                            <option>White Plains Hospital</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- eNarrative Section -->
+        <div class="form-section">
+            <h2 class="form-section-title">Narrative Generation</h2>
+            <div>
+                <label for="narrative-summary">Narrative</label>
+                <textarea id="narrative-summary" rows="10" placeholder="Fill out the form above and click 'Generate' to create a base narrative."></textarea>
+            </div>
+            <!-- Button container -->
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button type="button" id="generate-narrative">Generate Narrative</button>
+                <button type="button" id="refine-narrative" class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white" disabled>Refine with AI ✨</button>
+            </div>
+
+            <div class="mt-8 border-t pt-6">
+                 <label for="ai-narrative-summary" class="font-semibold text-lg text-gray-700">AI-Refined Narrative</label>
+                 <div id="ai-narrative-summary-container" class="mt-2 w-full p-4 min-h-[240px] bg-gray-50 border border-gray-200 rounded-lg text-gray-800">
+                    <p class="text-gray-500">The AI-refined narrative will appear here after you click the "Refine with AI" button.</p>
+                 </div>
+            </div>
+             <div class="mt-8 border-t pt-6">
+                 <label for="ai-rationale-container" class="font-semibold text-lg text-gray-700">Clinical Rationale</label>
+                 <div id="ai-rationale-container" class="mt-2 w-full p-4 min-h-[120px] bg-gray-50 border border-gray-200 rounded-lg text-gray-800">
+                    <p class="text-gray-500">The clinical reasoning behind potential interventions will appear here after refining the narrative.</p>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Register service worker for PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch(function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+            }
+
+            const causeOfInjuryData = {
+                "Animal": ["Contact with dog", "Contact with nonvenomous animal, NOS"],
+                "Asphyxiation": ["Asphyxiation", "Hanging", "Trapped in bed linens"],
+                "Bodily Force": ["Hit against or bumped into by another person (accidental)", "Hit/kick/bite/scratch by another person (accidental)"],
+                "Drowning": ["Bath-tub", "Natural water", "Other", "Swimming pool"],
+                "Environmental": ["Exposure to excessive natural cold", "Exposure to excessive natural heat", "Exposure to uncontrolled fire in building or structure"],
+                "Fall": ["Bed", "Chair", "Fall/jump/push from high place, NOS", "Furniture, NOS", "Ice, snow", "Ladder", "One level to another", "Other slipping, tripping and stumbling and falls", "Playground equipment", "Same level slip, trip, stumble", "Same level, NOS", "Shower/empty bath-tub", "Slip, trip, stumble without fall", "Stairs/steps", "Toilet", "Unspecified fall, NOS", "Wheelchair/nonmotorized scooter/motorized mobility scooter"],
+                "Intent": ["Abuse/Neglect NOS, suspected", "Assault by blunt object", "Assault by bodily force", "Assault by firearm discharge", "Assault by stabbing, NOS", "Assault, NOS", "Homicide (attempted), NOS", "Intentional self-harm by firearm", "Intentional self-harm, NOS", "Intentional self-harm, sharp object", "Other specified events, undetermined intent", "Suicide attempt"],
+                "Law Enforcement": ["Legal intervention"],
+                "Mechanical Force": ["Struck by thrown/projected/falling object", "Caught/crushed/jammed/pinched in or between objects", "Contact with blunt object, NOS", "Struck by other objects"],
+                "MVC, Non-Traffic Related": ["All-terrain/off-road accident, nontraffic", "Car accident NOS, nontraffic", "Motorcycle accident NOS, nontraffic", "Other motor-vehicle accident, nontraffic"],
+                "MVC, Traffic Related": ["Ambulance/fire engine accident", "Bus accident", "Car accident, NOS", "Car occupant injured in transport accident, NOS", "Collision with car/truck/van, car occupant injury", "Collision with pedestrian/animal, car occupant injury", "Collision with unspecified motor vehicles, NOS", "Crashing of motor vehicle, NOS", "Heavy transport vehicle accident", "Motorcycle accident, NOS", "Transport accident, NOS", "Truck/van accident", "Unknown mode of transport", "Vehicle accident, NOS"],
+                "Other": ["Foreign body or object entering through skin", "Injury, unspecified", "Other injury of unspecified body region", "Other specified effects of external causes"],
+                "Pedal Cyclist": ["Nontraffic accident", "Traffic accident", "Electric Bike"],
+                "Pedestrian": ["Car/truck/van, nontraffic accident", "Car/truck/van, traffic accident", "Electric scooters/boards/skates"],
+                "Poisoning": ["Poisoning by unspecified substance", "Toxic effect of alcohol", "Toxic effect of unknown substance"],
+                "Sharp Objects": ["Knife/sword/dagger", "Sharp glass", "Sharp object, NOS"],
+                "Tools/Devices": ["Contact with machinery NOS"]
+            };
+
+             const medicalHistoryData = {
+                "Behavioral": [{"name":"ADHD","description":"Attention deficit disorder"},{"name":"Anorexia Nervosa","description":"Eating disorder (severe food restriction)"},{"name":"Antisocial Personality","description":"Personality disorder"},{"name":"Asperger's","description":"Form of autism"},{"name":"Autistic","description":"Autism spectrum disorder"},{"name":"Avoidant Personality","description":"Personality disorder"},{"name":"Bipolar Disorder","description":"Mood disorder (highs and lows)"},{"name":"Borderline Personality","description":"Personality disorder"},{"name":"Bulimia Nervosa","description":"Eating disorder (binging and purging)"},{"name":"Dementia (w/o behavioral disturbance)","description":"Dementia (no behavioral issues)"},{"name":"Dementia (with behavioral disturbance)","description":"Dementia (with behavioral issues)"},{"name":"Dependent Personality","description":"Personality disorder"},{"name":"Exposure to War","description":"Exposure to combat or war"},{"name":"Histrionic Personality","description":"Personality disorder"},{"name":"Homelessness","description":"No fixed address"},{"name":"Insomnia","description":"Difficulty sleeping"},{"name":"Major Depression","description":"Depression"},{"name":"Manic Episodes","description":"Periods of high energy/agitation"},{"name":"Narcissistic Personality","description":"Personality disorder"},{"name":"Obsessive-Compulsive","description":"Personality disorder"},{"name":"Other Personality Dis.","description":"Personality disorder (unspecified)"},{"name":"Paranoid Personality","description":"Personality disorder"},{"name":"PTSD","description":"Post-traumatic stress disorder"},{"name":"Schizoaffective Disorder","description":"Mood and psychotic disorder"},{"name":"Schizoid Personality","description":"Personality disorder"},{"name":"Stress","description":"Stress"}],
+                "Blood": [{"name":"Amyloidosis","description":"Abnormal protein buildup"},{"name":"Anemia","description":"Low red blood cells"},{"name":"Blood -Factor IX Deficiency","description":"Bleeding disorder (Hemophilia B)"},{"name":"Blood -Factor VIII Deficiency","description":"Bleeding disorder (Hemophilia A)"},{"name":"Fluid Overload","description":"Fluid overload (hypervolemia)"},{"name":"Hyperkalemia","description":"High potassium"},{"name":"Hyperlipidemia","description":"High cholesterol"},{"name":"Hypokalemia","description":"Low potassium"},{"name":"Neutropenia","description":"Low white blood cells"},{"name":"Sarcoidosis","description":"Inflammatory disease"},{"name":"Sickle Cell Disease","description":"Sickle cell anemia"},{"name":"Sickle Cell Trait","description":"Carries sickle cell gene"},{"name":"Splenic Disease","description":"Spleen problem"},{"name":"Thrombocytopenia","description":"Low platelets"},{"name":"Vitamin B Deficiency","description":"Low vitamin B"},{"name":"Vitamin B12 Deficiency","description":"Low vitamin B12"},{"name":"Vitamin D Deficiency","description":"Low vitamin D"},{"name":"Vitamin K Deficiency","description":"Low vitamin K"}],
+                "Cancer": [{"name":"Bladder","description":"Bladder cancer"},{"name":"Bone","description":"Bone cancer"},{"name":"Brain","description":"Brain cancer"},{"name":"Breast (Female)","description":"Female breast cancer"},{"name":"Breast (Male)","description":"Male breast cancer"},{"name":"Cervix","description":"Cervical cancer"},{"name":"Colon","description":"Colon cancer"},{"name":"Esophagus","description":"Esophageal cancer"},{"name":"Gallbladder","description":"Gallbladder cancer"},{"name":"Hodgkin Lymphoma","description":"Hodgkin's lymphoma"},{"name":"Intestinal Tract","description":"Intestinal cancer"},{"name":"Kaposi's Sarcoma","description":"Kaposi's sarcoma (skin cancer)"},{"name":"Kidney","description":"Kidney cancer"},{"name":"Larynx","description":"Larynx cancer (voice box)"},{"name":"Leukemia","description":"Blood cancer (leukemia)"},{"name":"Leukemia (In Remission)","description":"Leukemia (in remission)"},{"name":"Liver","description":"Liver cancer"},{"name":"Lung or Bronchus","description":"Lung cancer"},{"name":"Mesothelioma","description":"Cancer from asbestos"},{"name":"Multiple Myeloma (Relapse)","description":"Blood cancer (relapsed)"},{"name":"Multiple Myeloma (Remission)","description":"Blood cancer (in remission)"},{"name":"Non-Hodgkin Lymphoma","description":"Non-Hodgkin's lymphoma"},{"name":"Oropharynx","description":"Throat cancer"},{"name":"Ovary","description":"Ovarian cancer"},{"name":"Pancreas","description":"Pancreatic cancer"},{"name":"Prostate","description":"Prostate cancer"},{"name":"Rectum","description":"Rectal cancer"},{"name":"Skin","description":"Skin cancer (melanoma)"},{"name":"Small Intestine","description":"Small intestine cancer"},{"name":"Spinal Cord","description":"Spinal cord cancer"},{"name":"Spleen","description":"Spleen cancer"},{"name":"Stomach","description":"Stomach cancer"},{"name":"Testis","description":"Testicular cancer"},{"name":"Thyroid","description":"Thyroid cancer"},{"name":"Uterus","description":"Uterine cancer"},{"name":"Vagina","description":"Vaginal cancer"}],
+                "Cardiovascular": [{"name":"Angina","description":"Chest pain (heart-related)"},{"name":"Angina Post MI","description":"Chest pain after heart attack"},{"name":"Angina Unstable","description":"Unstable chest pain"},{"name":"Atherosclerosis","description":"Hardening of arteries"},{"name":"Atrial Flutter","description":"Irregular heartbeat (A-Flutter)"},{"name":"Cardiac Arrest","description":"Heart stopped"},{"name":"Cardiac Tamponade","description":"Fluid around heart"},{"name":"Cardiomegaly","description":"Enlarged heart"},{"name":"Cardiomyopathy","description":"Heart muscle disease"},{"name":"Cardiomyopathy Hypertrophic","description":"Thickened heart muscle"},{"name":"Cardiomyopathy Ischemic","description":"Weak heart from low blood flow"},{"name":"Endocarditis","description":"Heart infection"},{"name":"Endocarditis w/Valve Involved","description":"Heart valve infection"},{"name":"Heart Disease Unspecified","description":"Heart disease"},{"name":"Heart Failure","description":"Heart failure (CHF)"},{"name":"Hypertension","description":"High blood pressure"},{"name":"Hypotension","description":"Low blood pressure"},{"name":"Mitral Valve Prolapse","description":"Heart valve problem"},{"name":"Mitral Valve Stenosis","description":"Narrowed heart valve"},{"name":"Myocarditis Acute","description":"Heart muscle inflammation"},{"name":"Pulmonary Hypertension","description":"High blood pressure in lungs"},{"name":"Pulmonary Valve Disorder","description":"Heart valve problem"},{"name":"STEMI","description":"Heart attack (STEMI)"},{"name":"Supraventricular Tachycardia","description":"Fast heartbeat (SVT)"},{"name":"Tricuspid Valve Disorder","description":"Heart valve problem"},{"name":"Ventricular Tachycardia","description":"Fast heartbeat (V-Tach)"}],
+                "Congenital": [{"name":"Arteriovenous Malformation","description":"AVM (abnormal blood vessels)"},{"name":"Atrial Septal Defect","description":"Hole in heart (atria)"},{"name":"Atrioventricular Septal Defect","description":"Hole in heart (chambers)"},{"name":"Cystic Fibrosis","description":"Genetic lung/digestive disease"},{"name":"Down's Syndrome","description":"Down's syndrome"},{"name":"Fetal Alcohol Syndrome","description":"Fetal alcohol syndrome"},{"name":"Other Heart Congenital Malformations","description":"Heart birth defect"},{"name":"Patent Ductus Arteriosus","description":"Heart vessel birth defect (PDA)"},{"name":"Spina bifida","description":"Spine birth defect"},{"name":"Tetralogy of Fallot","description":"Heart birth defect (TOF)"},{"name":"Ventricular Septal Defect","description":"Hole in heart (ventricles)"}],
+                "Dental": [{"name":"Caries","description":"Cavities (tooth decay)"},{"name":"Cracked Tooth","description":"Cracked tooth"},{"name":"Loss of Tooth from Caries","description":"Tooth loss from decay"},{"name":"Loss of Tooth from Trauma","description":"Tooth loss from injury"}],
+                "EENT": [{"name":"Blind","description":"Blind (both eyes)"},{"name":"Blind Legally","description":"Legally blind"},{"name":"Cataract","description":"Cataracts"},{"name":"Deaf","description":"Deaf (non-speaking)"},{"name":"Ear Infections","description":"Chronic ear infection"},{"name":"Glaucoma","description":"Glaucoma"},{"name":"Hearing Loss","description":"Hearing loss"},{"name":"Tinnitus","description":"Ringing in ears"}],
+                "Endocrine": [{"name":"Diabetes Type I","description":"Type 1 Diabetes"},{"name":"Diabetes Type II","description":"Type 2 Diabetes"},{"name":"Hypothyroidism","description":"Low thyroid"}],
+                "GI": [{"name":"Alcoholic Gastritis","description":"Stomach inflammation from alcohol"},{"name":"Appendicitis","description":"Appendix inflammation"},{"name":"Cholecystitis","description":"Gallbladder inflammation"},{"name":"Constipation","description":"Constipation"},{"name":"Crohn's Disease","description":"Crohn's disease"},{"name":"Diverticulosis","description":"Diverticulosis"},{"name":"Dyspepsia","description":"Indigestion / Upset stomach"},{"name":"Esophageal Obstruction","description":"Esophagus blockage"},{"name":"Esophageal Varices w/Bleed","description":"Bleeding veins in esophagus"},{"name":"Esophageal Varices w/o Bleed","description":"Swollen veins in esophagus (no bleed)"},{"name":"Esophagitis","description":"Esophagus inflammation"},{"name":"Fecal Impaction","description":"Fecal impaction"},{"name":"Foodborne Illness","description":"Food poisoning"},{"name":"Gastric Ulcer w/Bleed","description":"Bleeding stomach ulcer"},{"name":"Gastric Ulcer w/o Bleed","description":"Stomach ulcer (no bleed)"},{"name":"Gastritis Chronic","description":"Stomach inflammation (chronic)"},{"name":"GERD/Reflux","description":"Acid reflux / Heartburn"},{"name":"GI Bleed","description":"Gastrointestinal bleed"},{"name":"Hematemesis","description":"Vomiting blood"},{"name":"Hemorrhoids","description":"Hemorrhoids"},{"name":"Hernia Inguinal","description":"Hernia in groin"},{"name":"Hernia Umbilical","description":"Hernia at navel"},{"name":"Intestinal Obstruction","description":"Bowel blockage"},{"name":"Intussusception","description":"Bowel folding on itself"},{"name":"Irritable Bowel Syndrome","description":"Irritable bowel syndrome (IBS)"},{"name":"Lactose Intolerance","description":"Lactose intolerance"},{"name":"Liver Disease","description":"Liver disease"},{"name":"Melena","description":"Dark, tarry stool (blood)"},{"name":"Obesity","description":"Obese"},{"name":"Pancreatitis (Acute)","description":"Pancreas inflammation (sudden)"},{"name":"Pancreatitis (Chronic)","description":"Pancreas inflammation (chronic)"},{"name":"Peritonitis","description":"Abdominal cavity infection"},{"name":"Ulcerative Colitis","description":"Ulcerative colitis"}],
+                "GU": [{"name":"Bladder Disorder","description":"Bladder problem"},{"name":"Overactive Bladder","description":"Overactive bladder"}],
+                "GYN": [{"name":"Amenorrhea","description":"Absence of menstruation"},{"name":"Dysmenorrhea","description":"Painful menstruation"},{"name":"Endometriosis","description":"Endometriosis"},{"name":"Menstruation Excessive/Irregular/Frequent","description":"Abnormal menstruation"}],
+                "Infectious": [{"name":"Bronchitis","description":"Bronchitis"},{"name":"Candidia","description":"Yeast infection"},{"name":"Cardiomyopathy (Viral)","description":"Weak heart from virus"},{"name":"Cellulitis (Extremity)","description":"Skin infection (arm/leg)"},{"name":"Cellulitis (Other site)","description":"Skin infection (other)"},{"name":"Chicken Pox","description":"Chicken pox"},{"name":"Chlamydia","description":"Chlamydia (STD)"},{"name":"Conjunctivitis (Viral)","description":"Pink eye (viral)"},{"name":"Conjunctivitis, unspecified","description":"Pink eye"},{"name":"Coronavirus","description":"Coronavirus (other)"},{"name":"Ebola","description":"Ebola virus"},{"name":"Encephalitis (Mosquito)","description":"Brain inflammation (mosquito)"},{"name":"Encephalitis (Viral)","description":"Brain inflammation (viral)"},{"name":"Endocarditis (Viral)","description":"Heart infection (viral)"},{"name":"Gonococcal Infection","description":"Gonorrhea (STD)"},{"name":"Hepatitis A","description":"Hepatitis A"},{"name":"Hepatitis B","description":"Hepatitis B (acute)"},{"name":"Hepatitis B (Viral)","description":"Hepatitis B (viral)"},{"name":"Hepatitis C","description":"Hepatitis C (acute)"},{"name":"Hepatitis C (Viral)","description":"Hepatitis C (viral)"},{"name":"Hepatitis E","description":"Hepatitis E"},{"name":"Herpes (anogenital)","description":"Herpes (STD)"},{"name":"Histoplasmosis","description":"Fungal lung infection"},{"name":"HIV","description":"HIV"},{"name":"HIV (Asymptomatic)","description":"HIV (no symptoms)"},{"name":"Influenza","description":"The flu"},{"name":"Influenza","description":"H. influenzae infection"},{"name":"Lyme Disease","description":"Lyme disease"},{"name":"Malaria","description":"Malaria"},{"name":"Measles","description":"Measles"},{"name":"Meningitis","description":"Infection of brain/spinal cord lining"},{"name":"Meningitis (Viral)","description":"Viral meningitis"},{"name":"Meningitis Bacterial","description":"Bacterial meningitis"},{"name":"Meningococcal","description":"Meningococcal infection"},{"name":"Mononucleosis","description":"Mono"},{"name":"Mumps","description":"Mumps"},{"name":"Myocarditis (Viral)","description":"Heart muscle inflammation (viral)"},{"name":"Pericarditis (Viral)","description":"Heart sac inflammation (viral)"},{"name":"Pneumonia Bacterial","description":"Bacterial lung infection"},{"name":"Pneumonia Viral","description":"Viral lung infection"},{"name":"Polio","description":"Polio"},{"name":"Pseudomonas","description":"Pseudomonas infection"},{"name":"Rabies","description":"Rabies"},{"name":"Rhinitis Due to Pollen","description":"Hay fever / Allergies"},{"name":"Rubella","description":"Rubella (German measles)"},{"name":"Scabies","description":"Scabies"},{"name":"Scarlet Fever","description":"Scarlet fever"},{"name":"Sepsis","description":"Systemic infection (blood infection)"},{"name":"Sinusitis Chronic","description":"Chronic sinus infection"},{"name":"Small Pox","description":"Smallpox"},{"name":"Syphilis","description":"Syphilis (STD)"},{"name":"Tetanus","description":"Tetanus"},{"name":"Toxic Shock Syndrome","description":"Toxic shock syndrome"},{"name":"Toxoplasmosis","description":"Toxoplasmosis"},{"name":"Trachoma","description":"Eye infection (trachoma)"},{"name":"Trichomoniasis","description":"Trichomoniasis (STD)"},{"name":"Tuberculosis Lung","description":"Tuberculosis (TB)"},{"name":"Typhus Fever","description":"Typhus fever"},{"name":"West Nile Virus","description":"West Nile virus"},{"name":"Whooping Cough w/o Pneumonia","description":"Whooping cough (no pneumonia)"},{"name":"Whooping Cough w/Pneumonia","description":"Whooping cough (with pneumonia)"},{"name":"Zoster","description":"Shingles"}],
+                "Musculoskeletal": [{"name":"Back Pain","description":"Back pain"},{"name":"Contractures","description":"Muscle/joint tightening"},{"name":"Gout","description":"Gout"},{"name":"Muscle Wasting","description":"Muscle loss (atrophy)"},{"name":"Osteoarthritis","description":"Arthritis (wear and tear)"},{"name":"Osteomyelitis","description":"Bone infection"},{"name":"Rhabdomyolysis","description":"Muscle breakdown"},{"name":"Rotator Cuff Tear","description":"Shoulder (rotator cuff) tear"},{"name":"Sciatica","description":"Nerve pain in back/leg"},{"name":"Spinal Fusion","description":"Spinal fusion (general)"},{"name":"Spinal Fusion (Cervical)","description":"Cervical spine fusion (neck)"},{"name":"Spinal Fusion (Lumbar)","description":"Lumbar spine fusion (low back)"},{"name":"Spinal Fusion (Thoracic)","description":"Thoracic spine fusion (mid back)"},{"name":"Spinal Radiculopathy","description":"Pinched nerve in spine"},{"name":"Spinal Stenosis","description":"Narrowing of spinal canal"},{"name":"Spinal Vertebral Collapse","description":"Collapsed vertebra"},{"name":"Stress Fracture","description":"Stress fracture"}],
+                "Neuro": [{"name":"Alzheimer's Disease","description":"Alzheimer's"},{"name":"Aphasia Post CVA","description":"Trouble speaking after stroke"},{"name":"Carpal Tunnel Syndrome","description":"Carpal tunnel"},{"name":"Cerebral Infarction","description":"Stroke (clot)"},{"name":"Cerebral Ischemia","description":"Low blood flow to brain"},{"name":"Cerebral Palsy","description":"Cerebral palsy (CP)"},{"name":"Deficits Post CVA","description":"Cognitive problems after stroke"},{"name":"Difficulty Speaking Post CVA","description":"Trouble speaking after stroke"},{"name":"Dystonia","description":"Muscle movement disorder"},{"name":"Epilepsy (Focal)","description":"Seizures (focal)"},{"name":"Epilepsy (Seizures)","description":"Seizure disorder (epilepsy)"},{"name":"Epilepsy (w/Status Epilepticus)","description":"Seizures (status epilepticus)"},{"name":"Extradural Hemorrhage","description":"Bleed outside brain lining"},{"name":"Guillain-Barre Syndrome","description":"Guillain-Barre syndrome"},{"name":"Headache","description":"Headache"},{"name":"Hemiplegia & Hemiparesis","description":"Paralysis/weakness on one side"},{"name":"Hemiplegia Post CVA","description":"Paralysis on one side after stroke"},{"name":"Huntington's Disease","description":"Huntington's disease"},{"name":"Intracerebral Hemorrhage","description":"Stroke (brain bleed)"},{"name":"Migraines","description":"Migraine headaches"},{"name":"Multiple Sclerosis","description":"Multiple Sclerosis (MS)"},{"name":"Paraplegia","description":"Paralysis of lower body"},{"name":"Parkinson's Disease","description":"Parkinson's disease"},{"name":"Quadriplegia","description":"Paralysis of all four limbs"},{"name":"Sleep Apnea","description":"Stops breathing while sleeping"},{"name":"Speech Deficit Post CVA","description":"Speech problems after stroke"},{"name":"Subarachnoid Hemorrhage","description":"Stroke (bleed around brain)"},{"name":"Subdural Hemorrhage","description":"Stroke (bleed in brain lining)"}],
+                "Newborn": [{"name":"Breech Delivery","description":"Newborn (breech delivery)"},{"name":"Cardiac Arrest","description":"Newborn cardiac arrest"},{"name":"Compressed Cord","description":"Newborn (cord compression)"},{"name":"Hypoxic Encephalopathy - Mild","description":"Newborn brain injury (mild HIE)"},{"name":"Hypoxic Encephalopathy - Moderate","description":"Newborn brain injury (mod HIE)"},{"name":"Hypoxic Encephalopathy - Severe","description":"Newborn brain injury (severe HIE)"},{"name":"Low Birth Weight","description":"Newborn (low birth weight)"},{"name":"Maternal Alcohol Use","description":"Newborn (maternal alcohol use)"},{"name":"Maternal Complications","description":"Newborn (maternal complications)"},{"name":"Maternal Smoking","description":"Newborn (maternal tobacco use)"},{"name":"Maternal Substance Use","description":"Newborn (maternal drug use)"},{"name":"Meconium Aspiration","description":"Newborn (meconium)"},{"name":"Meconium Aspiration w/Resp Distress","description":"Newborn (meconium with breathing problem)"},{"name":"Neonatal Jaundice","description":"Newborn (jaundice)"},{"name":"Placental Transfusion Syndrome","description":"Newborn (placental issue)"},{"name":"Post-term","description":"Newborn (post-term / late)"},{"name":"Precipitate Delivery","description":"Newborn (fast delivery)"},{"name":"Premature ROM","description":"Newborn (preterm water break)"},{"name":"Pre-term","description":"Newborn (pre-term / early)"},{"name":"Prolapsed Cord","description":"Newborn (prolapsed cord)"},{"name":"Resp Distress Syndrome","description":"Newborn (breathing problem / RDS)"},{"name":"Sepsis Bacterial","description":"Newborn (sepsis)"}],
+                "OB": [{"name":"Abnormal Glucose During Pregnancy","description":"Pregnancy (high blood sugar)"},{"name":"Alcohol Abuse During Pregnancy","description":"Pregnancy (alcohol use)"},{"name":"Breech Presentation","description":"Pregancy (breech)"},{"name":"Cardiomyopathy Peripartum","description":"Pregnancy (weak heart)"},{"name":"Diabetes Gestational","description":"Pregnancy (gestational diabetes)"},{"name":"Drug Abuse During Pregnancy","description":"Pregnancy (drug use)"},{"name":"Eclampsia","description":"Pregnancy (eclampsia / seizures)"},{"name":"Ectopic Pregnancy","description":"Ectopic pregnancy"},{"name":"Fetal Distress Due to Medications","description":"Pregnancy (fetal distress from meds)"},{"name":"Hypertension Maternal","description":"Pregnancy (high blood pressure)"},{"name":"Labor Prolonged","description":"Pregnancy (long labor)"},{"name":"Malnutrition Due to Pregnancy","description":"Pregnancy (malnutrition)"},{"name":"Miscarriage","description":"Miscarriage"},{"name":"Physical Abuse During Pregnancy","description":"Pregnancy (physical abuse)"},{"name":"Placenta Previa w/Hemorrhage","description":"Pregnancy (placenta previa with bleed)"},{"name":"Placenta Previa w/o Hemorrhage","description":"Pregnancy (placenta previa no bleed)"},{"name":"Post-term Pregnancy","description":"Pregnancy (post-term / late)"},{"name":"Pre-eclampsia mild-mod","description":"Pregnancy (pre-eclampsia, mild)"},{"name":"Pre-eclampsia Severe","description":"Pregnancy (pre-eclampsia, severe)"},{"name":"Pre-term Labor","description":"Pregnancy (pre-term labor)"},{"name":"Pre-term Rupture of Membranes (ROM)","description":"Pregnancy (pre-term water break)"},{"name":"Prolapsed Cord","description":"Pregnancy (prolapsed cord)"},{"name":"Proteinuria Gestational","description":"Pregnancy (protein in urine)"},{"name":"Sexual Abuse During Pregnancy","description":"Pregnancy (sexual abuse)"},{"name":"Smoking During Pregnancy","description":"Pregnancy (smoking)"},{"name":"Spotting","description":"Pregnancy (spotting)"},{"name":"Threatened Miscarriage","description":"Pregnancy (threatened miscarriage)"},{"name":"Vomiting Due to Pregnancy","description":"Pregnancy (vomiting)"}],
+                "Renal": [{"name":"End Stage Renal Disease","description":"Kidney failure (on dialysis)"},{"name":"Hydronephrosis","description":"Swelling of kidney"},{"name":"Kidney Disease (Stage 1)","description":"Chronic kidney disease (Stage 1)"},{"name":"Kidney Disease (Stage 2 - mild)","description":"Chronic kidney disease (Stage 2)"},{"name":"Kidney Disease (Stage 3 - Moderate)","description":"Chronic kidney disease (Stage 3)"},{"name":"Kidney Disease (Stage 4 - Severe)","description":"Chronic kidney disease (Stage 4)"},{"name":"Kidney Disease (Stage 5)","description":"Chronic kidney disease (Stage 5)"},{"name":"Kidney Failure (Acute)","description":"Sudden kidney failure"}],
+                "Respiratory": [{"name":"Acute Resp Distress Syndrome","description":"ARDS / Severe lung failure"},{"name":"Asthma (Mild)","description":"Mild asthma"},{"name":"Asthma (Moderate)","description":"Moderate asthma"},{"name":"Asthma (Severe)","description":"Severe asthma"},{"name":"Asthma (Status Asthmaticus)","description":"Severe asthma attack"},{"name":"COPD","description":"COPD / Emphysema / Chronic Bronchitis"},{"name":"Hemothorax","description":"Blood in lung cavity"},{"name":"Other Disorder","description":"Respiratory problem (unspecified)"},{"name":"Pneumonia due to Coronavirus","description":"Pneumonia from COVID-19"},{"name":"Pulmonary Edema (Acute)","description":"Fluid in lungs (sudden)"},{"name":"Pulmonary Edema (Chronic)","description":"Fluid in lungs (chronic)"},{"name":"RSV","description":"RSV (respiratory virus)"},{"name":"RSV Pneumonia","description":"Pneumonia from RSV"},{"name":"SARS","description":"SARS (respiratory virus)"},{"name":"Spontaneous Pneumothorax","description":"Collapsed lung"},{"name":"Ventilator Related Pneumonia","description":"Pneumonia from ventilator (VAP)"}],
+                "Skin": [{"name":"Skin - Pressure Ulcer","description":"Bedsore / Pressure sore"}],
+                "Substance Abuse": [{"name":"Alcohol (In remission)","description":"Alcoholism (in remission)"},{"name":"Alcohol Dependence","description":"Alcoholism"},{"name":"Alcohol Intoxication","description":"Alcohol intoxication"},{"name":"Cocaine","description":"Cocaine abuse/dependence"},{"name":"Inhalant","description":"Inhalant abuse"},{"name":"Nicotine Dependence","description":"Tobacco/Nicotine user"},{"name":"Opioid Abuse","description":"Opioid (heroin/pills) abuse"},{"name":"Opioid Dependence (In Remission)","description":"Opioid addiction (in remission)"},{"name":"Opioid Dependence w/Intoxication","description":"Opioid addiction (intoxicated)"},{"name":"Sedative, Hypnotic, Anxiolytic","description":"Benzodiazepine/sleep med abuse"}],
+                "Vascular": [{"name":"Embolism/Thrombosis Vein","description":"Blood clot in vein"},{"name":"Phlebitis/Thrombophlebitis","description":"Vein inflammation / clot"},{"name":"Varicose Vein(s)","description":"Varicose veins"},{"name":"Vein Disorder Other","description":"Vein problem (unspecified)"}]
+            };
+
+            const impressionData = {
+                "Abdominal": ["Acute pain", "Generalized pain"],
+                "Alcohol/Drug Exposure": ["Adverse effect of unspecified substance", "Alcohol intoxication", "Alcohol use", "Alcohol withdrawal", "Suspected Opioid related", "Other psychoactive substance", "Sedative, anti-anxiety related"],
+                "Cardiovascular": ["Angina (pain related to heart)", "Arrhythmia", "Cardiac arrest", "Cardiomyopathy", "Chest pain, non-cardiac", "Congestive Heart Failure", "Hypertension", "Hypotension", "Myocardial Infarction (Heart Attack)", "Palpitations", "Peripheral edema", "Syncope (fainting)"],
+                "Diabetic": ["Diabetic Ketoacidosis (DKA)", "Hyperglycemia", "Hypoglycemia"],
+                "Emotional State/Behavior": ["Agitated/excited delirium", "Anxiety", "Behavioral, other", "Depression", "Homicidal ideation", "Mania", "Person in behavioral crisis", "Psychosis", "Suicidal ideation", "Suicide attempt"],
+                "Environmental": ["Bites/stings", "Cold exposure/hypothermia", "Heat exposure/hyperthermia", "High altitude sickness", "Lightning strike", "Submersion (drowning/near drowning)"],
+                "General Illness": ["Fatigue/malaise", "Fever/chills", "Generalized weakness", "Illness, NOS", "Nausea", "Sepsis", "Shock", "Vomiting"],
+                "Infectious Disease": ["COVID-19", "Hepatitis", "HIV/AIDS", "Influenza-like illness", "Meningitis", "MRSA", "Tuberculosis"],
+                "Neurological": ["Altered mental status", "Dizziness/vertigo", "Headache/migraine", "Seizure", "Stroke/CVA", "TIA (transient ischemic attack)", "Weakness - one sided"],
+                "OB/GYN": ["Abnormal vaginal bleeding", "Ectopic pregnancy", "Labor", "Miscarriage", "Post-partum hemorrhage", "Sexual assault"],
+                "Other": ["Obvious Death", "Medical device complication"],
+                "Pain": ["Back pain, non-traumatic", "Chronic pain", "Pain, NOS", "Pelvic/perineal pain"],
+                "Reproductive System": ["Normal delivery", "Pregnancy related", "Vaginal bleeding, abnormal"],
+                "Respiratory": ["Asthma", "Bronchospasm, acute", "Common cold", "COPD", "Difficulty breathing", "Flu", "Fluid in lungs", "Nosebleed", "Pneumonia", "Respiratory distress", "Respiratory failure", "Respiratory, other", "Upper respiratory infection"],
+                "Trauma": ["Abrasion/friction burn", "Amputation", "Avulsion", "Burn, chemical", "Burn, electrical", "Burn, NOS", "Burn, thermal", "Contusion/bruise", "Crush injury", "Degloving", "Dislocation", "Dog bite", "Electrical injury", "Eye injury", "Facial trauma", "Foreign body obstruction", "Fracture, closed", "Fracture, open", "Gun shot wound", "Head injury", "Internal injury", "Laceration/cut", "Needle stick", "Puncture/penetrating", "Sprain/strain", "Stab wound", "Traumatic injury, NOS"]
+            };
+
+            const examFindingsData = {
+                "Head (eExam.05)": {
+                    findings: ["Normocephalic/Atraumatic", "Battle's Sign", "Contusion/Bruising", "Crepitus", "Deformity", "Laceration", "Penetrating Injury", "Raccoon Eyes", "Soft Tissue Swelling", "Subcutaneous Emphysema"]
+                },
+                "Face (eExam.06)": {
+                    findings: ["Symmetrical", "Asymmetrical", "Contusion/Bruising", "Droop", "Laceration", "Nasal Flaring", "Penetrating Injury", "Soft Tissue Swelling"]
+                },
+                "Eyes (eExam.18)": {
+                    locations: ["Left", "Right", "Bilateral"],
+                    findings: ["PERRLA", "Pupils Equal and Reactive", "Pupils Unequal", "Pupils Sluggish", "Pupils Non-Reactive/Fixed", "Pupils Pinpoint", "Pupils Dilated", "Conjunctival Hemorrhage", "Foreign Body", "Nystagmus"]
+                },
+                "Neck (eExam.07)": {
+                    findings: ["No JVD", "JVD", "Trachea Midline", "Tracheal Deviation", "Accessory Muscle Use", "C-Spine Tenderness", "Contusion/Bruising", "Laceration", "Penetrating Injury", "Subcutaneous Emphysema"]
+                },
+                "Chest (eExam.25)": {
+                    locations: ["Left", "Right", "Bilateral", "Anterior", "Posterior", "Lateral"],
+                    findings: ["Symmetrical Rise and Fall", "Barrel Chest", "Contusion/Bruising", "Crepitus", "Deformity", "Flail Segment", "Intercostal Retractions", "Paradoxical Motion", "Penetrating Injury", "Sucking Chest Wound", "Subcutaneous Emphysema", "Tenderness"]
+                },
+                "Lungs (eExam.23)": {
+                    locations: ["Left Upper", "Left Lower", "Right Upper", "Right Middle", "Right Lower", "Bilateral"],
+                    findings: ["Clear and Equal Bilaterally", "Absent", "Diminished", "Rales/Crackles", "Rhonchi", "Wheezing", "Stridor"]
+                },
+                "Heart (eExam.09)": {
+                    findings: ["Regular Rate and Rhythm", "Irregularly Irregular", "Regularly Irregular", "Bradycardia", "Tachycardia", "Distant/Muffled Tones"]
+                },
+                "Abdomen (eExam.11)": {
+                    locations: ["RUQ", "LUQ", "RLQ", "LLQ", "Umbilical", "Epigastric", "Suprapubic", "Generalized"],
+                    findings: ["Soft and Non-Tender", "Tender", "Firm", "Distended", "Guarding", "Pulsatile Mass", "Rebound Tenderness", "Rigidity", "Bowel Sounds Present", "Bowel Sounds Absent/Hypoactive", "Contusion/Bruising", "Evisceration"]
+                },
+                "Pelvis/GU (eExam.12)": {
+                    findings: ["Stable", "Unstable", "Bleeding", "Contusion/Bruising", "Crepitus", "Deformity", "Incontinence", "Priapism"]
+                },
+                "Back/Spine (eExam.14)": {
+                    locations: ["Cervical", "Thoracic", "Lumbar", "Sacral"],
+                    findings: ["Atraumatic", "Contusion/Bruising", "Deformity", "Laceration", "Step-Off Deformity", "Tenderness"]
+                },
+                "Extremities (eExam.16)": {
+                    locations: ["Left Arm", "Right Arm", "Left Leg", "Right Leg"],
+                    findings: ["No Gross Deformity", "Abrasion", "Amputation", "Contusion/Bruising", "Crepitus", "Cyanosis", "Deformity", "Edema", "Laceration", "Open Fracture", "Pallor", "Paralysis", "Paresis (Weakness)", "Pulses Present and Equal", "Pulses Absent/Diminished", "Capillary Refill < 2s", "Capillary Refill > 2s"]
+                },
+                "Skin (eExam.04)": {
+                    findings: ["Warm, Pink, and Dry", "Ashen", "Cool/Cold", "Clammy/Diaphoretic", "Cyanotic", "Flushed", "Hot", "Jaundiced", "Mottled", "Pale", "Poor Turgor"]
+                },
+                 "Mental Status (eExam.19)": {
+                    findings: ["Alert", "Appropriate", "Agitated", "Anxious", "Calm", "Combative", "Confused", "Cooperative", "Depressed", "Disoriented", "Distracted", "Distraught", "Hallucinations", "Hostile", "Inappropriate", "Lethargic", "Paranoid", "Sad", "Stupor", "Unresponsive", "Verbal"]
+                },
+                "Neurological (eExam.20)": {
+                    findings: ["Normal", "Facial Droop", "Arm Drift", "Speech Slurred/Aphasic", "Gait Ataxic/Unsteady", "Seizure Activity", "Paresthesia (Numbness/Tingling)", "Weakness - Unilateral", "Weakness - Bilateral"]
+                }
+            };
+
+             const symptomData = {
+                "Abdominal": ["Abdominal pain", "Distended abdomen", "Lower abdominal pain", "Nausea", "Stomach cramps", "Upper abdominal pain"],
+                "Alcohol/Drug Exposure": ["Alcohol intoxication", "Apparent drug classification", "Drug/medication", "Ingestion", "Inorganic substance use", "Poisoning", "Unspecified drugs/substance"],
+                "Cardiovascular": ["Angina/chest pain", "Atrial fibrillation, NOS", "Cardiac arrest", "General heart problem", "Hypertension", "Hypotension", "Myocardial infarction, NOS", "Palpitations", "STEMI, NOS"],
+                "Digestive": ["Abdominal distention/bloating", "Constipation", "Diarrhea", "Nausea", "Vomiting", "Vomiting blood"],
+                "Emotional State/Behavior": ["Anxiety", "Depression", "Emotional shock/stress", "Mental illness, NOS", "Nervousness", "Psych search", "Restless/agitated", "Reduced responsiveness", "Strange/unreasonable behavior", "Suicidal ideation", "Suicide attempt", "Worries"],
+                "Endocrine/Urinary": ["Chronic kidney disease", "Diabetic complications", "Hyperglycemia", "Hypoglycemia", "Pain upon urination", "Urination problem"],
+                "General/Systemic": ["Body fluid discharge"],
+                "Illness": ["Fever, NOS", "General symptoms, NOS", "Illness, NOS", "Undefined/unknown"],
+                "Injury": ["Facial injury", "Head injury", "Head/face/eye, NOS", "Impalement injury", "Injury, NOS", "Major area injury", "Multiple injuries, NOS", "Probable human/animal injury", "Undefined/unknown injury"],
+                "Level of Consciousness": ["Altered mental status, NOS", "Altered mental status, transient", "Disoriented, NOS", "Drowsy/lethargic", "Not alert/awake", "Unconscious, NOS"],
+                "Malaise": ["Fainting, NOS", "Malaise, NOS", "Weakness"],
+                "Neurological": ["Dizziness, NOS", "Epileptic seizure/syndrome", "General seizure/fit", "Lightheaded/vertigo", "Seizure, NOS", "Seizure search", "Stroke"],
+                "Nervous/Musculoskeletal": ["Abnormal gait/mobility", "Abnormal/involuntary movements", "Cramp/spasm", "Difficulty talking", "Facial weakness", "Other nervous symptoms", "Paralysis, NOS"],
+                "No Patient Complaint": ["Abuse/Neglect, NOS, suspected", "Assault on other, no finding", "Child encounter, no finding", "Exposure to pathogen, no finding", "Patient found, no complaint"],
+                "Pain": ["Acute pain due to trauma", "Back pain, NOS", "Chest pain (not angina)", "Chest pain, NOS", "Ear pain", "Facial pain", "Headache", "Hip pain", "Knee pain", "Limb/hand/foot/fingers/toes pain", "Lower back pain", "Neck pain", "Other pain", "Pain, NOS", "Pelvic/perineal pain", "Rib pain", "Shoulder pain"],
+                "Reproductive System": ["Vaginal bleeding, NOS"],
+                "Respiratory": ["Abnormal breathing", "Choking", "Cough, NOS", "Croup", "Difficulty breathing", "Nosebleed", "Noisy breathing", "Pain upon/difficulty of breathing", "Pain in throat", "Partial breathing", "Periodic breathing", "Respiratory arrest", "Respiratory distress", "Shortness of breath", "Wheezing"],
+                "Skin": ["Cold/sweaty", "Edema", "Localized swelling/mass/lump", "Pale/flushed", "Other skin changes", "Rash"]
+            };
+        
+            function createMedicationRow() {
+                const container = document.getElementById('medications-container');
+                const row = document.createElement('div');
+                row.className = 'medication-row';
+
+                // Create elements programmatically to avoid DOM parsing issues
+                const searchContainer = document.createElement('div');
+                searchContainer.style.gridColumn = '1 / -1';
+                searchContainer.style.position = 'relative';
+
+                const searchLabel = document.createElement('label');
+                searchLabel.textContent = 'Medication Name';
+                searchContainer.appendChild(searchLabel);
+
+                const searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.className = 'med-name-search';
+                searchInput.placeholder = 'Type to search for medication...';
+                searchContainer.appendChild(searchInput);
+
+                const suggestionsList = document.createElement('ul');
+                suggestionsList.className = 'suggestions-list hidden';
+                searchContainer.appendChild(suggestionsList);
+                
+                const detailsContainer = document.createElement('div');
+                detailsContainer.className = 'grid grid-cols-2 sm:grid-cols-4 gap-4';
+                detailsContainer.style.gridColumn = '1 / -1';
+                detailsContainer.innerHTML = `
+                    <div>
+                        <label class="text-sm">Dose</label>
+                        <input type="number" class="med-dose" placeholder="e.g., 81">
+                    </div>
+                    <div>
+                        <label class="text-sm">Unit</label>
+                        <select class="med-unit">
+                            <option>mg</option><option>mcg</option><option>g</option><option>mL</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-sm">Route</label>
+                        <select class="med-route-hist">
+                            <option>Oral</option><option>IV</option><option>IM</option><option>Sublingual</option><option>Topical</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-sm">Frequency</label>
+                        <input type="text" class="med-freq" placeholder="e.g., qd, BID">
+                    </div>
+                `;
+
+                searchInput.addEventListener('input', async (e) => {
+                    const query = e.target.value;
+                    if (query.length < 3) {
+                        suggestionsList.innerHTML = '';
+                        suggestionsList.classList.add('hidden');
+                        return;
+                    }
+                    const url = `https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?terms=${query}`;
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        suggestionsList.innerHTML = '';
+                        const drugNames = data[1];
+                        if(drugNames && drugNames.length > 0){
+                            suggestionsList.classList.remove('hidden');
+                            drugNames.forEach(drugName => {
+                                const li = document.createElement('li');
+                                li.textContent = drugName;
+                                li.addEventListener('click', () => {
+                                    searchInput.value = drugName;
+                                    suggestionsList.innerHTML = '';
+                                    suggestionsList.classList.add('hidden');
+                                });
+                                suggestionsList.appendChild(li);
+                            });
+                        } else {
+                            suggestionsList.classList.add('hidden');
+                        }
+                    } catch (error) {
+                        console.error('Error fetching drug data:', error);
+                        suggestionsList.classList.add('hidden');
+                    }
+                });
+
+                row.appendChild(searchContainer);
+                row.appendChild(detailsContainer);
+                container.appendChild(row);
+            }
+            
+            function createHistoryRow() {
+                const container = document.getElementById('medical-history-container');
+                const row = document.createElement('div');
+                row.className = 'history-row';
+
+                const firstTierSelect = document.createElement('select');
+                firstTierSelect.className = 'history-first-tier';
+                firstTierSelect.innerHTML = `<option value="" disabled selected>Select Category...</option>`;
+                Object.keys(medicalHistoryData).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = key;
+                    firstTierSelect.appendChild(option);
+                });
+
+                const secondTierSelect = document.createElement('select');
+                secondTierSelect.className = 'history-second-tier';
+                secondTierSelect.innerHTML = `<option value="" disabled selected>Select Condition...</option>`;
+                secondTierSelect.disabled = true;
+
+                const descriptionDisplay = document.createElement('div');
+                descriptionDisplay.className = 'history-description-display';
+                descriptionDisplay.textContent = 'Description:';
+
+
+                firstTierSelect.addEventListener('change', () => {
+                    const selectedCategory = firstTierSelect.value;
+                    secondTierSelect.innerHTML = `<option value="" disabled selected>Select Condition...</option>`;
+                    descriptionDisplay.textContent = 'Description:';
+                    if (selectedCategory && medicalHistoryData[selectedCategory]) {
+                        medicalHistoryData[selectedCategory].forEach(condition => {
+                             const option = document.createElement('option');
+                             option.value = condition.name;
+                             option.textContent = condition.name;
+                             secondTierSelect.appendChild(option);
+                        });
+                        secondTierSelect.disabled = false;
+                    } else {
+                        secondTierSelect.disabled = true;
+                    }
+                });
+                
+                secondTierSelect.addEventListener('change', () => {
+                    const selectedCategory = firstTierSelect.value;
+                    const selectedConditionName = secondTierSelect.value;
+                    const condition = medicalHistoryData[selectedCategory]?.find(c => c.name === selectedConditionName);
+                    descriptionDisplay.textContent = condition ? `Description: ${condition.description}` : 'Description:';
+                });
+
+                row.appendChild(firstTierSelect);
+                row.appendChild(secondTierSelect);
+                row.appendChild(descriptionDisplay);
+                container.appendChild(row);
+            }
+
+            function createExamRow() {
+                const container = document.getElementById('exam-findings-container');
+                const row = document.createElement('div');
+                row.className = 'exam-row';
+
+                const groupSelect = document.createElement('select');
+                groupSelect.className = 'exam-group';
+                groupSelect.innerHTML = `<option value="" disabled selected>Select Body System...</option>`;
+                Object.keys(examFindingsData).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = key.replace(/\s\(eExam\.\d+\)/, ''); // Clean up text for display
+                    groupSelect.appendChild(option);
+                });
+
+                const locationSelect = document.createElement('select');
+                locationSelect.className = 'exam-location';
+                locationSelect.innerHTML = `<option value="" disabled selected>Select Location...</option>`;
+                locationSelect.hidden = true;
+
+
+                const findingSelect = document.createElement('select');
+                findingSelect.className = 'exam-finding';
+                findingSelect.innerHTML = `<option value="" disabled selected>Select Finding...</option>`;
+                findingSelect.disabled = true;
+
+                groupSelect.addEventListener('change', () => {
+                    const selectedGroup = groupSelect.value;
+                    const groupData = examFindingsData[selectedGroup];
+                    
+                    // Reset and populate findings
+                    findingSelect.innerHTML = `<option value="" disabled selected>Select Finding...</option>`;
+                    if (groupData && groupData.findings) {
+                        groupData.findings.forEach(finding => {
+                             const option = document.createElement('option');
+                             option.value = finding;
+                             option.textContent = finding;
+                             findingSelect.appendChild(option);
+                        });
+                        findingSelect.disabled = false;
+                    } else {
+                        findingSelect.disabled = true;
+                    }
+
+                    // Reset and populate locations (if applicable)
+                    locationSelect.innerHTML = `<option value="" disabled selected>Select Location...</option>`;
+                    if (groupData && groupData.locations) {
+                        groupData.locations.forEach(location => {
+                            const option = document.createElement('option');
+                            option.value = location;
+                            option.textContent = location;
+                            locationSelect.appendChild(option);
+                        });
+                        locationSelect.hidden = false;
+                    } else {
+                        locationSelect.hidden = true;
+                    }
+                });
+                
+                row.appendChild(groupSelect);
+                row.appendChild(locationSelect);
+                row.appendChild(findingSelect);
+                container.appendChild(row);
+            }
+
+            function createInterventionRow() {
+                const container = document.getElementById('interventions-container');
+                const row = document.createElement('div');
+                row.className = 'intervention-row grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 border rounded-lg bg-gray-50 mb-4';
+
+                // Procedure
+                const procedureDiv = document.createElement('div');
+                procedureDiv.innerHTML = `
+                    <label>Procedure</label>
+                    <select class="procedure">
+                        <option value="" disabled selected>Select Procedure...</option>
+                        <option>Airway/Ventilation Management - Other</option>
+                        <option>Bag-Valve-Mask Ventilation</option>
+                        <option>Bleeding Control</option>
+                        <option>Blood Glucose Analysis</option>
+                        <option>Burn Care</option>
+                        <option>Cardiac Arrest Management</option>
+                        <option>Cervical Spine Restriction</option>
+                        <option>CPAP</option>
+                        <option>CPR</option>
+                        <option>Defibrillation</option>
+                        <option>Extremity Splinting</option>
+                        <option>Hemorrhage Control - Tourniquet</option>
+                        <option>IV Initiated</option>
+                        <option>Medication Administration</option>
+                        <option>Newborn Care/Delivery</option>
+                        <option>Oxygen Administration</option>
+                        <option>Patient Restraint</option>
+                        <option>Spinal Immobilization</option>
+                        <option>Suctioning</option>
+                    </select>
+                `;
+
+                // Medication
+                const medicationDiv = document.createElement('div');
+                medicationDiv.className = "col-span-1 lg:col-span-2";
+                
+                const medicationInnerContainer = document.createElement('div');
+                medicationInnerContainer.className = "grid grid-cols-1 md:grid-cols-2 gap-4"
+                
+                medicationInnerContainer.innerHTML = `
+                    <div>
+                        <label>Medication Given</label>
+                        <select class="medication">
+                            <option value="" disabled selected>Select Medication...</option>
+                            <option value="Oxygen">Oxygen</option>
+                            <option value="Oral Glucose">Oral Glucose</option>
+                            <option value="Aspirin">Aspirin</option>
+                            <option value="Narcan">Narcan (Naloxone)</option>
+                            <option value="Albuterol">Albuterol</option>
+                            <option value="Epinephrine">Epinephrine</option>
+                        </select>
+                    </div>
+                    <div class="medication-details grid grid-cols-2 gap-4 items-start">
+                        <!-- Oxygen Rate -->
+                        <div class="med-oxygen-rate-container hidden col-span-2">
+                            <label>Rate (L/min)</label>
+                            <input type="number" class="med-oxygen-rate" placeholder="e.g., 15">
+                        </div>
+                        <!-- Narcan/Albuterol Rounds -->
+                        <div class="med-rounds-container hidden col-span-2">
+                            <label>Rounds/Doses</label>
+                            <input type="number" class="med-rounds" placeholder="e.g., 1">
+                        </div>
+                        <!-- Aspirin Dose & Qty -->
+                        <div class="med-aspirin-container hidden grid grid-cols-2 gap-4 col-span-2">
+                            <div>
+                                <label>Dose (mg)</label>
+                                <input type="number" class="med-aspirin-dose" value="81">
+                            </div>
+                            <div>
+                                <label>Quantity</label>
+                                <input type="number" class="med-aspirin-qty" placeholder="e.g., 4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-1 md:col-span-2">
+                        <label>Medication Route</label>
+                         <select class="med-route">
+                            <option value="" disabled selected>Select Route...</option>
+                            <option>Inhalation</option><option>Intramuscular (IM)</option><option>Intranasal (IN)</option><option>Intraosseous (IO)</option><option>Intravenous (IV)</option><option>Oral (PO)</option><option>Subcutaneous (SQ)</option><option>Sublingual (SL)</option><option>Topical</option>
+                         </select>
+                    </div>
+                `;
+                medicationDiv.appendChild(medicationInnerContainer);
+
+                // Add event listener for the new medication dropdown
+                const medicationSelect = medicationDiv.querySelector('.medication');
+                const medOxygenRateContainer = medicationDiv.querySelector('.med-oxygen-rate-container');
+                const medRoundsContainer = medicationDiv.querySelector('.med-rounds-container');
+                const medAspirinContainer = medicationDiv.querySelector('.med-aspirin-container');
+
+                medicationSelect.addEventListener('change', function() {
+                    medOxygenRateContainer.classList.add('hidden');
+                    medRoundsContainer.classList.add('hidden');
+                    medAspirinContainer.classList.add('hidden');
+                    const selectedMed = this.value;
+                    switch (selectedMed) {
+                        case 'Oxygen':
+                            medOxygenRateContainer.classList.remove('hidden');
+                            break;
+                        case 'Narcan':
+                        case 'Albuterol':
+                            medRoundsContainer.classList.remove('hidden');
+                            break;
+                        case 'Aspirin':
+                            medAspirinContainer.classList.remove('hidden');
+                            break;
+                    }
+                });
+
+                row.appendChild(procedureDiv);
+                row.appendChild(medicationDiv);
+                container.appendChild(row);
+            }
+
+            function setupImpressionDropdowns() {
+                const parentSelect = document.getElementById('impression-parent');
+                const descriptionSelect = document.getElementById('impression-description');
+
+                Object.keys(impressionData).forEach(parent => {
+                    const option = document.createElement('option');
+                    option.value = parent;
+                    option.textContent = parent;
+                    parentSelect.appendChild(option);
+                });
+
+                parentSelect.addEventListener('change', () => {
+                    const selectedParent = parentSelect.value;
+                    descriptionSelect.innerHTML = `<option value="" disabled selected>Select Description...</option>`;
+                    if(selectedParent && impressionData[selectedParent]) {
+                        impressionData[selectedParent].forEach(description => {
+                            const option = document.createElement('option');
+                            option.value = description;
+                            option.textContent = description;
+                            descriptionSelect.appendChild(option);
+                        });
+                        descriptionSelect.disabled = false;
+                    } else {
+                        descriptionSelect.disabled = true;
+                    }
+                });
+            }
+
+            function setupSymptomDropdowns() {
+                const parentSelect = document.getElementById('symptom-parent');
+                const descriptionSelect = document.getElementById('symptom-description');
+
+                Object.keys(symptomData).forEach(parent => {
+                    const option = document.createElement('option');
+                    option.value = parent;
+                    option.textContent = parent;
+                    parentSelect.appendChild(option);
+                });
+
+                parentSelect.addEventListener('change', () => {
+                    const selectedParent = parentSelect.value;
+                    descriptionSelect.innerHTML = `<option value="" disabled selected>Select Description...</option>`;
+                    if(selectedParent && symptomData[selectedParent]) {
+                        symptomData[selectedParent].forEach(description => {
+                            const option = document.createElement('option');
+                            option.value = description;
+                            option.textContent = description;
+                            descriptionSelect.appendChild(option);
+                        });
+                        descriptionSelect.disabled = false;
+                    } else {
+                        descriptionSelect.disabled = true;
+                    }
+                });
+            }
+             function setupInjuryDropdowns() {
+                const categorySelect = document.getElementById('cause-injury-category');
+                const specificSelect = document.getElementById('cause-injury-specific');
+
+                Object.keys(causeOfInjuryData).forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelect.appendChild(option);
+                });
+
+                categorySelect.addEventListener('change', () => {
+                    const selectedCategory = categorySelect.value;
+                    specificSelect.innerHTML = `<option value="" disabled selected>Select Specific Cause...</option>`;
+                    if (selectedCategory && causeOfInjuryData[selectedCategory]) {
+                        causeOfInjuryData[selectedCategory].forEach(specific => {
+                            const option = document.createElement('option');
+                            option.value = specific;
+                            option.textContent = specific;
+                            specificSelect.appendChild(option);
+                        });
+                        specificSelect.disabled = false;
+                    } else {
+                        specificSelect.disabled = true;
+                    }
+                });
+            }
+
+            function setupOrientationCheckboxes() {
+                const avpuSelect = document.getElementById('avpu');
+                const mentalStatusContainer = document.getElementById('mental-status-container');
+                const orientationCheckboxes = document.querySelectorAll('.orientation-checkbox');
+                const orientationStatusDisplay = document.getElementById('orientation-status');
+                const gcsVerbalSelect = document.getElementById('gcs-verbal');
+                const gcsOrientedOption = gcsVerbalSelect.querySelector('option[value="5"]');
+
+                function updateOrientation() {
+                    const checkedCount = document.querySelectorAll('.orientation-checkbox:checked').length;
+                    orientationStatusDisplay.textContent = `A+O x ${checkedCount}`;
+
+                    // GCS Logic
+                    if (checkedCount > 0 && checkedCount < 4) {
+                        gcsOrientedOption.disabled = true;
+                        // If "Oriented" was selected, reset dropdown
+                        if (gcsVerbalSelect.value === '5') {
+                            gcsVerbalSelect.selectedIndex = 0;
+                        }
+                    } else { // This handles count === 0 and count === 4
+                        gcsOrientedOption.disabled = false;
+                    }
+                }
+
+                avpuSelect.addEventListener('change', function() {
+                    if (this.value === 'Alert') {
+                        mentalStatusContainer.classList.remove('hidden');
+                    } else {
+                        mentalStatusContainer.classList.add('hidden');
+                        // Uncheck all boxes and reset when hiding
+                        orientationCheckboxes.forEach(cb => cb.checked = false);
+                        updateOrientation(); // This will reset the count and GCS logic
+                    }
+                });
+
+                orientationCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', updateOrientation);
+                });
+
+                // Initial call to set state
+                updateOrientation();
+            }
+
+            document.getElementById('possible-injury').addEventListener('change', function() {
+                const traumaSection = document.getElementById('trauma-fields');
+                if (this.value === 'Yes') {
+                    traumaSection.classList.remove('hidden');
+                } else {
+                    traumaSection.classList.add('hidden');
+                     document.getElementById('cause-injury-category').selectedIndex = 0;
+                     document.getElementById('cause-injury-specific').innerHTML = `<option value="" disabled selected>Select Specific Cause...</option>`;
+                     document.getElementById('cause-injury-specific').disabled = true;
+                }
+            });
+            
+            document.getElementById('patient-gender').addEventListener('change', function() {
+                const pregnancySection = document.getElementById('pregnancy');
+                if(this.value === 'Female') {
+                    pregnancySection.closest('div').style.display = 'block';
+                } else {
+                    pregnancySection.closest('div').style.display = 'none';
+                    pregnancySection.selectedIndex = 0;
+                }
+            });
+
+            // S-LAMS Logic
+            const slamsCheckbox = document.getElementById('suspected-stroke-checkbox');
+            const slamsSection = document.getElementById('slams-section');
+            const slamsComponents = document.querySelectorAll('.slams-component');
+            const slamsScoreDisplay = document.getElementById('slams-score');
+
+            slamsCheckbox.addEventListener('change', function() {
+                slamsSection.classList.toggle('hidden', !this.checked);
+            });
+
+            function calculateSlamsScore() {
+                let score = 0;
+                slamsComponents.forEach(component => {
+                    score += parseInt(component.value, 10);
+                });
+                slamsScoreDisplay.textContent = score;
+            }
+
+            slamsComponents.forEach(component => {
+                component.addEventListener('change', calculateSlamsScore);
+            });
+
+
+            document.getElementById('add-medication').addEventListener('click', createMedicationRow);
+            document.getElementById('add-history').addEventListener('click', createHistoryRow);
+            document.getElementById('add-exam-finding').addEventListener('click', createExamRow);
+            document.getElementById('add-intervention').addEventListener('click', createInterventionRow);
+            
+            // Initial setup
+            createMedicationRow();
+            createHistoryRow();
+            createExamRow();
+            createInterventionRow();
+            setupImpressionDropdowns();
+            setupSymptomDropdowns();
+            setupInjuryDropdowns();
+            setupOrientationCheckboxes();
+            document.getElementById('pregnancy').closest('div').style.display = 'none';
+
+            // Collapsible sections
+            const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+            collapsibleHeaders.forEach((header, index) => {
+                const content = header.nextElementSibling;
+                // Collapse all but the first section by default
+                if (index > 0) {
+                    content.classList.add('hidden');
+                    header.classList.add('collapsed');
+                }
+
+                header.addEventListener('click', () => {
+                    content.classList.toggle('hidden');
+                    header.classList.toggle('collapsed');
+                });
+            });
+
+
+            const generateBtn = document.getElementById('generate-narrative');
+            const refineBtn = document.getElementById('refine-narrative');
+            const narrativeTextarea = document.getElementById('narrative-summary');
+            const aiContainer = document.getElementById('ai-narrative-summary-container');
+            const rationaleContainer = document.getElementById('ai-rationale-container');
+
+            generateBtn.addEventListener('click', function() {
+                const getSelectedText = (id) => {
+                    const select = document.getElementById(id);
+                    if (!select || select.selectedIndex < 0 || (select.options[0] && select.options[0].disabled && select.selectedIndex === 0) ) return '';
+                    return select.options[select.selectedIndex].text;
+                };
+                 const getSelectedValue = (id) => {
+                     const select = document.getElementById(id);
+                      if (!select || select.selectedIndex < 0 || (select.options[0] && select.options[0].disabled && select.selectedIndex === 0) ) return '';
+                     return select.value;
+                 };
+                const getValue = (id) => {
+                    const el = document.getElementById(id);
+                    return el ? el.value : '';
+                };
+
+                let narrativeSentences = [];
+                
+                // --- Dispatch & Presentation ---
+                const dispatchReason = getValue('dispatch-reason');
+                const age = getValue('patient-age');
+                const gender = getSelectedText('patient-gender');
+
+                let opening = `Fairview FD was dispatched for a reported complaint of ${dispatchReason || '[DISPATCH REASON]'}.`;
+                 if (age && gender) {
+                    opening += ` On arrival, crews made contact with a ${age}-year-old ${gender.toLowerCase()}.`;
+                }
+                narrativeSentences.push(opening);
+
+                const firstOnScene = getSelectedText('first-unit-on-scene');
+                const transferTo = getValue('transfer-to');
+                if (firstOnScene === 'Yes') {
+                    narrativeSentences.push(`Fairview units arrived on location prior to ${transferTo || '[Transporting Unit]'}.`);
+                } else if (firstOnScene === 'No') {
+                    narrativeSentences.push(`Fairview units arrived on scene after ${transferTo || 'GPD EMS'} had already established patient contact.`);
+                }
+                
+                const patientLocation = getValue('patient-found-location');
+                if (patientLocation) narrativeSentences.push(`Patient was found ${patientLocation}.`);
+
+                const complaint = getSelectedText('symptom-description');
+                 if(complaint) narrativeSentences.push(`The patient's chief complaint was stated as ${complaint.toLowerCase()}.`);
+                
+                const events = getValue('events-leading-up-to');
+                if (events) narrativeSentences.push(`Events leading up to the incident were reported as: ${events}.`);
+
+                const impressionDesc = getSelectedText('impression-description');
+                 if(impressionDesc) narrativeSentences.push(`The provider's primary impression was ${impressionDesc.toLowerCase()}.`);
+
+                // --- History ---
+                const historyRows = document.querySelectorAll('.history-row');
+                let historyList = [];
+                historyRows.forEach(row => {
+                    const conditionSelect = row.querySelector('.history-second-tier');
+                    if (conditionSelect.selectedIndex > 0) {
+                        historyList.push(conditionSelect.options[conditionSelect.selectedIndex].text);
+                    }
+                });
+                if(historyList.length > 0) {
+                     narrativeSentences.push(`Past medical history is significant for ${historyList.join(', ')}.`);
+                }
+                
+                const medAllergies = getValue('medication-allergies');
+                if (medAllergies) narrativeSentences.push(`The patient reports medication allergies to ${medAllergies}.`);
+                const foodAllergies = getValue('food-allergies');
+                if (foodAllergies) narrativeSentences.push(`The patient reports environmental/food allergies to ${foodAllergies}.`);
+
+                const pregnancyStatus = getSelectedText('pregnancy');
+                if (pregnancyStatus && pregnancyStatus !== 'No' && pregnancyStatus !== 'Unknown') {
+                    narrativeSentences.push(`Patient reports pregnancy status as: ${pregnancyStatus.toLowerCase()}.`);
+                }
+
+                // --- Assessment ---
+                const avpu = getSelectedValue('avpu');
+                
+                let mentalStatus = '';
+                if (avpu === 'Alert') {
+                    const checkedCheckboxes = document.querySelectorAll('.orientation-checkbox:checked');
+                    const count = checkedCheckboxes.length;
+                    if (count === 4) {
+                        mentalStatus = 'A+O x 4';
+                    } else if (count > 0) {
+                        const checkedItems = Array.from(checkedCheckboxes).map(cb => cb.nextElementSibling.textContent.toLowerCase());
+                        mentalStatus = `oriented to ${checkedItems.join(' and ')}`;
+                    }
+                }
+
+                const gcsEye = getSelectedValue('gcs-eye');
+                const gcsVerbal = getSelectedValue('gcs-verbal');
+                const gcsMotor = getSelectedValue('gcs-motor');
+
+                let assessmentString = 'Initial assessment revealed a patient who was';
+                if(avpu) assessmentString += ` ${avpu.toLowerCase()}`;
+                
+                if (mentalStatus) {
+                    assessmentString += ` and ${mentalStatus}.`;
+                } else {
+                    assessmentString += '.';
+                }
+                narrativeSentences.push(assessmentString);
+
+                if(gcsEye > 0 && gcsVerbal > 0 && gcsMotor > 0) {
+                    const gcsTotal = parseInt(gcsEye) + parseInt(gcsVerbal) + parseInt(gcsMotor);
+                    narrativeSentences.push(`GCS score was ${gcsTotal} (E${gcsEye}V${gcsVerbal}M${gcsMotor}).`);
+                }
+
+                const hr = getValue('heart-rate');
+                const sbp = getValue('bp-systolic');
+                const dbp = getValue('bp-diastolic');
+                const rr = getValue('resp-rate');
+                const respEffort = getSelectedText('resp-effort');
+                const spo2 = getValue('spo2');
+                const bgl = getValue('blood-glucose');
+
+                let vitalsList = [];
+                if (hr) vitalsList.push(`HR ${hr}`);
+                if (sbp && dbp) vitalsList.push(`BP ${sbp}/${dbp}`);
+                if (rr) vitalsList.push(`RR ${rr} (${respEffort.toLowerCase() || 'normal effort'})`);
+                if (spo2) vitalsList.push(`SpO2 ${spo2}%`);
+                if (bgl) vitalsList.push(`BGL ${bgl}`);
+
+                if (vitalsList.length > 0) {
+                    narrativeSentences.push(`Initial vital signs were: ${vitalsList.join(', ')}.`);
+                }
+                
+                if (slamsCheckbox.checked) {
+                    const slamsScore = document.getElementById('slams-score').textContent;
+                    narrativeSentences.push(`A S-LAMS stroke assessment was performed with a score of ${slamsScore}.`);
+                    const resolved = getSelectedText('stroke-symptoms-resolved');
+                    if(resolved) narrativeSentences.push(`Stroke symptoms were noted as ${resolved === 'Yes' ? 'resolved' : 'not resolved'} on scene.`);
+                }
+
+
+                const painScore = getValue('pain-scale-score');
+                if (painScore) {
+                    narrativeSentences.push(`The patient rated their pain a ${painScore}/10.`);
+                }
+
+                 const examRows = document.querySelectorAll('.exam-row');
+                let examList = [];
+                examRows.forEach(row => {
+                    const groupSelect = row.querySelector('.exam-group');
+                    const locationSelect = row.querySelector('.exam-location');
+                    const findingSelect = row.querySelector('.exam-finding');
+
+                    if (groupSelect.selectedIndex > 0 && findingSelect.selectedIndex > 0) {
+                        let findingText = `${groupSelect.options[groupSelect.selectedIndex].text.split('(')[0].trim()}: `;
+                        if (!locationSelect.hidden && locationSelect.selectedIndex > 0) {
+                            findingText += `${locationSelect.options[locationSelect.selectedIndex].text} - `;
+                        }
+                        findingText += `${findingSelect.options[findingSelect.selectedIndex].text.toLowerCase()}`;
+                        examList.push(findingText);
+                    }
+                });
+                if (examList.length > 0) {
+                    narrativeSentences.push(`Physical exam revealed the following: ${examList.join('; ')}.`);
+                }
+                
+                // --- Interventions ---
+                const interventionRows = document.querySelectorAll('.intervention-row');
+                let interventionsList = [];
+
+                interventionRows.forEach(row => {
+                    const procedureSelect = row.querySelector('.procedure');
+                    const medicationSelect = row.querySelector('.medication');
+
+                    if (procedureSelect.selectedIndex > 0 && procedureSelect.options[procedureSelect.selectedIndex].value) {
+                        interventionsList.push(procedureSelect.options[procedureSelect.selectedIndex].text.toLowerCase());
+                    }
+
+                    if (medicationSelect.selectedIndex > 0 && medicationSelect.options[medicationSelect.selectedIndex].value) {
+                        let medString = '';
+                        const medication = medicationSelect.value;
+                        const routeSelect = row.querySelector('.med-route');
+                        const route = routeSelect.selectedIndex > 0 ? routeSelect.options[routeSelect.selectedIndex].text : '';
+
+                        switch (medication) {
+                            case 'Oxygen':
+                                const rate = row.querySelector('.med-oxygen-rate').value;
+                                medString = `administration of Oxygen`;
+                                if (rate) medString += ` at ${rate} L/min`;
+                                break;
+                            case 'Narcan':
+                            case 'Albuterol':
+                                const rounds = row.querySelector('.med-rounds').value;
+                                medString = `administration of ${medication}`;
+                                if (rounds) medString += ` (${rounds} round${rounds > 1 ? 's' : ''})`;
+                                break;
+                            case 'Aspirin':
+                                const dose = row.querySelector('.med-aspirin-dose').value;
+                                const qty = row.querySelector('.med-aspirin-qty').value;
+                                if (dose && qty) {
+                                    const totalDose = parseInt(dose) * parseInt(qty);
+                                    medString = `administration of ${totalDose}mg (${qty} x ${dose}mg tablets) of aspirin`;
+                                } else {
+                                    medString = `administration of Aspirin`;
+                                }
+                                break;
+                            default:
+                                medString = `administration of ${medication}`;
+                                break;
+                        }
+
+                        if(route) medString += ` via ${route} route`;
+                        interventionsList.push(medString);
+                    }
+                });
+
+                if(interventionsList.length > 0){
+                     narrativeSentences.push(`Interventions included ${interventionsList.join(' and ')}.`);
+                }
+
+
+                const moveMethod = getSelectedText('patient-move');
+                const movePosition = getSelectedText('patient-position');
+                if (moveMethod) {
+                    let moveStr = `Patient was moved to the transporting unit's ambulance via ${moveMethod.toLowerCase()}`;
+                    if (movePosition) {
+                         moveStr += ` and placed in a ${movePosition.toLowerCase()} position`;
+                    }
+                    narrativeSentences.push(`${moveStr}.`);
+                }
+
+                // --- Transfer ---
+                const disposition = getSelectedText('disposition');
+                const hospital = getSelectedText('hospital-destination');
+                
+                if (firstOnScene === 'No' && transferTo) {
+                    // This case is handled in the arrival string now
+                } else if (disposition === 'Patient Care Transferred to Another EMS Unit' && transferTo) {
+                    narrativeSentences.push(`Care was transferred to the arriving EMS unit, ${transferTo}, for transport to ${hospital || '[HOSPITAL]'}.`);
+                    narrativeSentences.push(`A full verbal report of all findings and interventions was provided to the incoming paramedic crew.`);
+                } else if (disposition) {
+                    narrativeSentences.push(`The final patient disposition was: ${disposition}.`);
+                }
+                
+                // Set the final narrative text
+                narrativeTextarea.value = narrativeSentences.join(' ');
+
+                if (narrativeTextarea.value.trim()) {
+                    refineBtn.disabled = false;
+                } else {
+                    refineBtn.disabled = true;
+                }
+            });
+
+            refineBtn.addEventListener('click', async function() {
+                const originalNarrative = narrativeTextarea.value;
+                if (!originalNarrative.trim()) {
+                    aiContainer.textContent = 'Please generate a base narrative first.';
+                    aiContainer.classList.add('text-red-500');
+                    rationaleContainer.innerHTML = '<p class="text-gray-500">Generate a narrative first to get the clinical rationale.</p>';
+                    return;
+                }
+
+                // --- Start Loading State ---
+                refineBtn.disabled = true;
+                refineBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 inline-block text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Refining...`;
+                aiContainer.innerHTML = '<p class="text-gray-500">AI is refining the narrative...</p>';
+                rationaleContainer.innerHTML = '<p class="text-gray-500">Generating clinical rationale...</p>';
+
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+                try {
+                    // --- API Call for Narrative ---
+                    const narrativeSystemPrompt = "You are an expert EMS report writer specializing in documentation for non-transporting fire department first response units. Your task is to revise a provided pre-hospital care narrative. Your revision must strictly adhere to the following principles: 1) **Format:** Write it as a single, cohesive story-style paragraph. 2) **Tone:** It must be concise, clear, clinically sound, and professional. 3) **Flow:** The events must be presented in a strict chronological order. 4) **Focus:** The perspective must be that of a first responder on a non-transporting unit (e.g., a fire engine or truck). 5) **Clinical Terminology:** Use 'A+O x 4' for 'alert and oriented'. For GCS scores, always include the total score followed by the breakdown in parentheses, like 'GCS 15 (E4V5M6)'. 6) **Content Augmentation:** Based on the vital signs and clinical presentation in the original text, you must incorporate the single most logical and standard intervention that would have been performed by a first responder (e.g., 'Oxygen was administered via nasal cannula for hypoxia,' or 'Bleeding was controlled with direct pressure'). Do not add any information that cannot be reasonably inferred. Do not use markdown or lists.";
+                    const narrativePayload = {
+                        contents: [{ parts: [{ text: originalNarrative }] }],
+                        systemInstruction: { parts: [{ text: narrativeSystemPrompt }] },
+                    };
+                    const narrativeResponse = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(narrativePayload)
+                    });
+                    if (!narrativeResponse.ok) throw new Error(`Narrative API call failed: ${narrativeResponse.status}`);
+                    const narrativeResult = await narrativeResponse.json();
+                    const narrativeText = narrativeResult.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (narrativeText) {
+                        aiContainer.innerHTML = `<p>${narrativeText}</p>`;
+                    } else {
+                        throw new Error("Invalid response from Narrative AI.");
+                    }
+
+                    // --- API Call for Rationale ---
+                    const getSelectedText = (id) => { const select = document.getElementById(id); if (!select || select.selectedIndex < 0 || (select.options[0] && select.options[0].disabled && select.selectedIndex === 0) ) return ''; return select.options[select.selectedIndex].text; };
+                    const getValue = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+                    let historyList = [];
+                    document.querySelectorAll('.history-row .history-second-tier').forEach(sel => { if (sel.selectedIndex > 0) historyList.push(sel.options[sel.selectedIndex].text); });
+
+                    const rationaleSystemPrompt = "You are an EMS educator providing clinical reasoning. Based on the provided patient data, explain the 'why' behind potential BLS interventions a non-transporting fire department unit might consider. Focus on connecting specific data points (like vital signs or history) to the rationale for a treatment. For example, 'Given the SpO2 of 88%, supplemental oxygen is indicated to treat hypoxia.' or 'For a patient with a history of cardiac problems presenting with chest pain, administering aspirin is a standard BLS intervention to prevent platelet aggregation.' Present your explanation in a clear, educational format, using bullet points for clarity. Use markdown for formatting.";
+                    const rationaleUserQuery = `Patient Data:\n- Dispatch Reason: ${getValue('dispatch-reason')}\n- Primary Symptom: ${getSelectedText('symptom-description')}\n- Provider's Impression: ${getSelectedText('impression-description')}\n- Medical History: ${historyList.join(', ')}\n- Vitals: HR: ${getValue('heart-rate')}, BP: ${getValue('bp-systolic')}/${getValue('bp-diastolic')}, RR: ${getValue('resp-rate')}, SpO2: ${getValue('spo2')}%, BGL: ${getValue('blood-glucose')}\n\nBased on this data, provide a brief clinical rationale for potential BLS interventions.`;
+                    const rationalePayload = {
+                        contents: [{ parts: [{ text: rationaleUserQuery }] }],
+                        systemInstruction: { parts: [{ text: rationaleSystemPrompt }] },
+                    };
+                    const rationaleResponse = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(rationalePayload)
+                    });
+                    if (!rationaleResponse.ok) throw new Error(`Rationale API call failed: ${rationaleResponse.status}`);
+                    const rationaleResult = await rationaleResponse.json();
+                    const rationaleText = rationaleResult.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                    if (rationaleText) {
+                        // Basic markdown to HTML conversion for lists
+                        let html = rationaleText.replace(/\n/g, '<br>');
+                        html = html.replace(/\* /g, '<br>&bull; ');
+                        rationaleContainer.innerHTML = html;
+                    } else {
+                        throw new Error("Invalid response from Rationale AI.");
+                    }
+
+                } catch (error) {
+                    console.error("Error during AI processing:", error);
+                    aiContainer.innerHTML = `<p class="text-red-500">An error occurred while refining the narrative. Details: ${error.message}</p>`;
+                    rationaleContainer.innerHTML = `<p class="text-red-500">Could not generate rationale due to an error.</p>`;
+                } finally {
+                    // --- End Loading State ---
+                    refineBtn.disabled = false;
+                    refineBtn.innerHTML = 'Refine with AI ✨';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
